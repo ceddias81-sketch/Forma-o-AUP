@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AMS no Atendimento Urgente Pediátrico</title>
+<style>
+:root{
+  --ink:#102A33;
+  --ink-2:#0A1E24;
+  --paper:#F5F1E8;
+  --paper-2:#FBF8F1;
+  --teal:#14857B;
+  --teal-d:#0E5F58;
+  --teal-l:#3FB0A4;
+  --mist:#D6E7E2;
+  --coral:#E2513F;
+  --coral-d:#C23A2A;
+  --amber:#F2B33C;
+  --sky:#8FC9E8;
+  --line:rgba(16,42,51,.14);
+  --shadow:0 24px 60px -28px rgba(16,42,51,.45);
+  --display:"Avenir Next","Segoe UI",system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  --round:ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;
+  --body:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--body);
+  background:var(--ink-2);
+  color:var(--ink);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+/* ---------- STAGE / SCENE ENGINE ---------- */
+.stage{position:fixed;inset:0;overflow:hidden;background:var(--paper)}
+.scene{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  padding:clamp(20px,5vw,84px);
+  background:var(--paper);
+  opacity:0;transform:scale(1.28);
+  pointer-events:none;
+  will-change:transform,opacity;
+}
+.scene-inner{width:min(1080px,100%);position:relative}
+@media (prefers-reduced-motion:no-preference){
+  .scene{transition:transform .9s cubic-bezier(.66,0,.2,1),opacity .55s ease}
+}
+.scene.is-before{transform:scale(.6);opacity:0}
+.scene.is-after{transform:scale(1.28);opacity:0}
+.scene.is-active{transform:scale(1);opacity:1;pointer-events:auto}
+
+.scene--dark{background:var(--ink);color:var(--paper)}
+.scene--ink2{background:radial-gradient(120% 120% at 70% 10%,#16323b 0%,var(--ink-2) 70%);color:var(--paper)}
+.scene--teal{background:linear-gradient(155deg,var(--teal) 0%,var(--teal-d) 100%);color:#fff}
+
+/* ---------- ENTRANCE ANIMATIONS ---------- */
+.r{opacity:0}
+@media (prefers-reduced-motion:no-preference){
+  .scene.is-active .r{animation:rise .7s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--d,0)*1ms)}
+  @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+  .scene.is-active .pop{animation:pop .6s cubic-bezier(.2,1.3,.3,1) both;animation-delay:calc(var(--d,0)*1ms)}
+  @keyframes pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+  .scene.is-active .fade{animation:fade .9s ease both;animation-delay:calc(var(--d,0)*1ms)}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+}
+@media (prefers-reduced-motion:reduce){.r,.pop,.fade{opacity:1!important}}
+
+/* ---------- TYPE ---------- */
+.eyebrow{
+  font-family:var(--display);font-weight:800;letter-spacing:.22em;
+  text-transform:uppercase;font-size:clamp(11px,1.25vw,14px);
+  color:var(--teal);display:inline-flex;align-items:center;gap:.6em;margin-bottom:.9rem;
+}
+.scene--dark .eyebrow,.scene--ink2 .eyebrow{color:var(--teal-l)}
+.scene--teal .eyebrow{color:#bfeee7}
+.eyebrow::before{content:"";width:30px;height:2px;background:currentColor;display:inline-block}
+.kicker{font-family:var(--round);font-weight:800;color:var(--coral);text-transform:uppercase;letter-spacing:.06em;font-size:clamp(13px,1.4vw,16px)}
+h1.display{
+  font-family:var(--display);font-weight:800;line-height:1.02;letter-spacing:-.02em;
+  font-size:clamp(34px,6.4vw,76px);
+}
+h2.head{
+  font-family:var(--display);font-weight:800;line-height:1.05;letter-spacing:-.015em;
+  font-size:clamp(28px,4.6vw,54px);
+}
+.lede{font-size:clamp(17px,2.1vw,24px);line-height:1.45;max-width:46ch;color:rgba(16,42,51,.82)}
+.scene--dark .lede,.scene--ink2 .lede,.scene--teal .lede{color:rgba(255,255,255,.86)}
+.small{font-size:clamp(13px,1.5vw,16px);line-height:1.5}
+.muted{color:rgba(16,42,51,.55)}
+.scene--dark .muted,.scene--ink2 .muted{color:rgba(255,255,255,.55)}
+strong.hl{color:var(--coral);font-weight:800}
+.scene--dark strong.hl,.scene--ink2 strong.hl{color:var(--amber)}
+
+/* ---------- COMPONENTS ---------- */
+.keymsg{
+  display:inline-block;background:var(--amber);color:var(--ink);
+  font-family:var(--round);font-weight:800;
+  font-size:clamp(16px,2vw,22px);line-height:1.3;
+  padding:.7em 1.1em;border-radius:14px;box-shadow:var(--shadow);
+}
+.keymsg.coral{background:var(--coral);color:#fff}
+.source{font-size:12px;letter-spacing:.04em;color:rgba(16,42,51,.5);font-weight:600;margin-top:1.4rem}
+.scene--dark .source,.scene--ink2 .source,.scene--teal .source{color:rgba(255,255,255,.5)}
+
+.grid{display:grid;gap:clamp(12px,1.6vw,20px)}
+.card{
+  background:var(--paper-2);border:1px solid var(--line);border-radius:18px;
+  padding:clamp(16px,2vw,26px);box-shadow:0 12px 30px -24px rgba(16,42,51,.5);
+}
+.scene--dark .card,.scene--ink2 .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+.card h3{font-family:var(--display);font-weight:800;font-size:clamp(17px,1.9vw,21px);margin-bottom:.35em}
+.card p{font-size:clamp(13px,1.5vw,16px);line-height:1.45;color:rgba(16,42,51,.72)}
+.scene--dark .card p,.scene--ink2 .card p{color:rgba(255,255,255,.72)}
+
+.ic{width:1em;height:1em;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;display:block}
+.icwrap{
+  width:clamp(46px,5vw,62px);height:clamp(46px,5vw,62px);border-radius:15px;
+  display:grid;place-items:center;font-size:clamp(24px,2.7vw,32px);
+  background:var(--mist);color:var(--teal-d);flex:none;
+}
+.icwrap.coral{background:#f6d8d2;color:var(--coral-d)}
+.icwrap.amber{background:#f9e7bd;color:#a9781a}
+.scene--dark .icwrap,.scene--ink2 .icwrap{background:rgba(63,176,164,.16);color:var(--teal-l)}
+
+.pill{display:inline-flex;align-items:center;gap:.5em;background:var(--mist);color:var(--teal-d);
+  font-weight:700;font-size:clamp(13px,1.5vw,16px);padding:.5em .9em;border-radius:999px}
+.pill .ic{font-size:1.1em}
+.pill.coral{background:#f6d8d2;color:var(--coral-d)}
+.pill.amber{background:#f9e7bd;color:#a9781a}
+
+.flow{display:flex;align-items:center;gap:clamp(8px,1.4vw,18px);flex-wrap:wrap}
+.flow .node{display:flex;flex-direction:column;align-items:center;gap:.5em;text-align:center;font-weight:700;font-size:clamp(12px,1.4vw,15px)}
+.flow .arr{font-size:clamp(20px,2.4vw,30px);color:var(--teal-l);font-weight:800}
+
+.checkline{display:flex;align-items:center;gap:.8em;padding:.6em 0;border-bottom:1px solid var(--line);font-size:clamp(15px,1.8vw,19px);font-weight:600}
+.checkline:last-child{border-bottom:none}
+.checkline .box{width:1.3em;height:1.3em;border:2px solid var(--teal);border-radius:6px;flex:none;display:grid;place-items:center;color:var(--teal)}
+.checkline .box .ic{font-size:.9em;opacity:0;transform:scale(.4)}
+.scene.is-active .checkline .box .ic{animation:pop .5s cubic-bezier(.2,1.3,.3,1) both}
+
+/* opening capsule motif */
+.capsule{width:clamp(70px,9vw,120px);height:clamp(34px,4.4vw,58px);border-radius:999px;
+  background:linear-gradient(90deg,#fff 0 50%,var(--coral) 50% 100%);
+  box-shadow:var(--shadow),inset 0 0 0 2px rgba(16,42,51,.1);position:relative;flex:none}
+.capsule::after{content:"";position:absolute;top:18%;left:14%;width:26%;height:30%;border-radius:999px;background:rgba(255,255,255,.6)}
+
+/* selection viz */
+.colony{display:grid;grid-template-columns:repeat(20,1fr);gap:clamp(3px,.5vw,7px);max-width:560px}
+.colony .b{aspect-ratio:1;border-radius:50%;background:var(--teal-l);opacity:.95}
+.scene.is-active .colony .b.die{animation:die .7s ease forwards;animation-delay:calc(900ms + var(--i)*7ms)}
+@keyframes die{to{opacity:.08;transform:scale(.3);background:#9aa7a4}}
+.scene.is-active .colony .b.live{background:var(--coral);animation:livep 1.1s ease 1.6s infinite alternate}
+@keyframes livep{to{transform:scale(1.18);box-shadow:0 0 0 3px rgba(226,81,63,.25)}}
+.scene.is-active .colony .b.grow{background:var(--coral);opacity:0;transform:scale(0);animation:grow .6s cubic-bezier(.2,1.3,.3,1) forwards;animation-delay:calc(2.4s + var(--i)*16ms)}
+
+/* compare bars */
+.bars{display:flex;flex-direction:column;gap:clamp(10px,1.6vw,18px)}
+.bar{display:grid;grid-template-columns:minmax(130px,30%) 1fr auto;align-items:center;gap:clamp(10px,1.6vw,18px);font-weight:700;font-size:clamp(13px,1.6vw,18px)}
+.bar .track{height:clamp(20px,2.6vw,32px);background:var(--mist);border-radius:999px;overflow:hidden;position:relative}
+.bar .fill{height:100%;width:0;border-radius:999px;background:var(--teal-l)}
+.bar.crit .fill{background:var(--coral)}
+.scene.is-active .bar .fill{animation:fillb 1.1s cubic-bezier(.5,0,.2,1) forwards;animation-delay:.3s}
+@keyframes fillb{to{width:var(--w)}}
+.bar .val{font-family:var(--display);font-weight:800;min-width:3.4ch;text-align:right}
+
+/* tap card (case / myths) */
+.tap{position:relative;cursor:pointer;outline:none}
+.tap .back{display:none}
+.tap.open .front{display:none}
+.tap.open .back{display:block}
+.tap:focus-visible{box-shadow:0 0 0 3px var(--amber)}
+
+/* radial nurse */
+.radial{position:relative;width:min(560px,86vw);aspect-ratio:1;margin-inline:auto}
+.radial .center{position:absolute;inset:32% 32%;border-radius:50%;display:grid;place-items:center;text-align:center;
+  background:var(--teal);color:#fff;font-family:var(--display);font-weight:800;box-shadow:var(--shadow);padding:6%;line-height:1.1;font-size:clamp(13px,1.8vw,20px)}
+.radial .sat{position:absolute;width:30%;left:35%;top:35%;}
+.radial .satcard{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:.6em;text-align:center;font-weight:700;font-size:clamp(11px,1.3vw,14px);box-shadow:0 10px 24px -18px rgba(16,42,51,.6)}
+.radial .satcard .icwrap{margin:0 auto .35em;width:clamp(34px,3.6vw,46px);height:clamp(34px,3.6vw,46px);font-size:clamp(18px,2vw,24px)}
+
+/* quiz */
+.quiz-q{font-family:var(--display);font-weight:800;font-size:clamp(20px,2.8vw,32px);line-height:1.2;margin-bottom:1.2rem}
+.quiz-opts{display:grid;gap:12px;max-width:640px}
+.qopt{display:flex;align-items:center;gap:.8em;text-align:left;background:var(--paper-2);border:2px solid var(--line);
+  border-radius:14px;padding:.85em 1.1em;font-size:clamp(15px,1.8vw,19px);font-weight:600;transition:.2s}
+.qopt:hover{border-color:var(--teal-l)}
+.qopt .dot{width:1.4em;height:1.4em;border-radius:50%;border:2px solid currentColor;flex:none;display:grid;place-items:center;color:var(--teal)}
+.qopt.right{border-color:var(--teal);background:#e3f2ef;color:var(--teal-d)}
+.qopt.wrong{border-color:var(--coral);background:#fbe4e0;color:var(--coral-d)}
+.qfb{margin-top:1.1rem;font-weight:700;font-size:clamp(14px,1.7vw,18px);min-height:1.4em}
+.qprog{font-family:var(--display);font-weight:800;color:var(--teal);letter-spacing:.04em}
+
+/* ---------- CHROME ---------- */
+.chrome{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;justify-content:space-between;align-items:center;
+  padding:clamp(14px,2vw,24px) clamp(16px,3vw,34px);pointer-events:none;mix-blend-mode:normal}
+.brand{display:flex;align-items:center;gap:.6em;font-family:var(--display);font-weight:800;font-size:clamp(12px,1.4vw,15px);letter-spacing:.02em;color:var(--ink);opacity:.85}
+.brand .dotmark{width:11px;height:11px;border-radius:50%;background:var(--coral)}
+.scene-dark-mode .brand{color:var(--paper)}
+.counter{font-family:var(--display);font-weight:800;font-size:clamp(12px,1.4vw,15px);letter-spacing:.08em;color:var(--ink);opacity:.7}
+.scene-dark-mode .counter{color:var(--paper)}
+
+.progress{position:fixed;left:0;bottom:0;height:4px;background:var(--coral);width:0;z-index:45;transition:width .5s cubic-bezier(.5,0,.2,1)}
+
+.nav{position:fixed;bottom:clamp(16px,2.4vw,30px);right:clamp(16px,3vw,34px);z-index:45;display:flex;gap:10px}
+.nav button{width:clamp(46px,5vw,56px);height:clamp(46px,5vw,56px);border-radius:50%;background:var(--ink);color:var(--paper);
+  display:grid;place-items:center;font-size:clamp(20px,2.4vw,26px);box-shadow:var(--shadow);transition:.2s}
+.nav button:hover{background:var(--teal)}
+.nav button:disabled{opacity:.3;cursor:default;background:var(--ink)}
+.scene-dark-mode .nav button{background:var(--paper);color:var(--ink)}
+.scene-dark-mode .nav button:hover{background:var(--amber)}
+.nav button:focus-visible,.dot:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+
+.dots{position:fixed;left:clamp(16px,3vw,34px);bottom:clamp(18px,2.6vw,32px);z-index:45;display:flex;gap:7px;align-items:center;max-width:60vw;flex-wrap:wrap}
+.dot{width:9px;height:9px;border-radius:50%;background:rgba(16,42,51,.22);transition:.25s}
+.dot.on{background:var(--coral);transform:scale(1.35)}
+.scene-dark-mode .dot{background:rgba(255,255,255,.28)}
+.scene-dark-mode .dot.on{background:var(--amber)}
+
+.hint{position:fixed;bottom:clamp(16px,2.4vw,30px);left:50%;transform:translateX(-50%);z-index:44;
+  font-size:12px;font-weight:600;letter-spacing:.04em;color:rgba(16,42,51,.5);pointer-events:none;
+  transition:opacity .4s}
+.scene-dark-mode .hint{color:rgba(255,255,255,.5)}
+
+@media (max-width:680px){
+  .dots{display:none}
+  .bar{grid-template-columns:1fr;gap:4px}
+  .bar .track{order:3}
+}
+
+/* hub layout (slide 8) */
+.hub{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:clamp(12px,2vw,26px);margin-top:clamp(22px,3vw,40px)}
+.hub-col{display:flex;flex-direction:column;gap:clamp(10px,1.5vw,16px)}
+.hub-center{width:clamp(150px,17vw,205px);aspect-ratio:1;border-radius:50%;background:var(--teal);color:#fff;
+  display:grid;place-items:center;text-align:center;font-family:var(--display);font-weight:800;
+  font-size:clamp(15px,1.9vw,22px);line-height:1.14;padding:9%;box-shadow:var(--shadow);margin-inline:auto}
+.hub-card{display:flex;align-items:center;gap:.7em;text-align:left;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.13);border-radius:14px;padding:clamp(10px,1.4vw,16px);
+  font-weight:700;font-size:clamp(13px,1.5vw,18px);color:var(--paper);line-height:1.2}
+.hub-card .icwrap{width:clamp(38px,4vw,48px);height:clamp(38px,4vw,48px);font-size:clamp(19px,2.1vw,25px);
+  background:rgba(63,176,164,.18);color:var(--teal-l);flex:none}
+@media (max-width:760px){
+  .hub{grid-template-columns:1fr 1fr}
+  .hub-col{display:contents}
+  .hub-center{grid-column:1/-1;order:-1;width:clamp(130px,38vw,170px)}
+}
+
+/* ============ MOBILE / PORTRAIT ============ */
+@media (max-width:760px){
+  .scene{
+    flex-direction:column;justify-content:flex-start;align-items:center;
+    overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
+    padding:clamp(60px,15vw,74px) clamp(18px,5vw,26px) 108px;
+  }
+  /* any two-column slide layout -> single column */
+  .scene-inner[style*="grid-template-columns"]{grid-template-columns:1fr!important;gap:clamp(18px,5vw,26px)!important}
+  /* inner card grids -> two columns */
+  .grid[style*="grid-template-columns"]{grid-template-columns:1fr 1fr!important;gap:12px!important}
+  /* full-width tap cards (mitos) where supported */
+  .grid:has(> .tap){grid-template-columns:1fr!important}
+  .tap.card{min-height:0!important}
+  /* chrome stays on one line */
+  .brand{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60vw}
+  .colony{max-width:100%!important}
+  /* keep nav clear of the home bar */
+  .nav{bottom:max(16px,env(safe-area-inset-bottom))}
+  .hint{display:none}
+}
+@media (max-width:560px){
+  h1.display{font-size:clamp(27px,8.6vw,40px)}
+  h2.head{font-size:clamp(23px,7.4vw,34px)}
+  .lede{font-size:clamp(16px,4.4vw,20px)}
+  .brand,.counter{font-size:11px}
+  .keymsg{font-size:clamp(15px,4.4vw,19px)}
+  .grid[style*="grid-template-columns"]{gap:10px!important}
+  .nav button{width:48px;height:48px}
+}
+
+/* institutional logo plate (opening) */
+.logo-slot{display:inline-flex;align-items:center;justify-content:center;background:#fff;border-radius:14px;
+  padding:clamp(10px,1.5vw,15px) clamp(16px,2.2vw,24px);box-shadow:var(--shadow);min-height:56px;
+  margin:0 auto clamp(18px,2.6vw,30px)}
+#brandLogo{max-height:clamp(64px,11vw,104px);max-width:min(60vw,260px);display:none}
+.logo-ph{font-family:var(--display);font-weight:800;color:#8a9794;font-size:clamp(12px,1.5vw,15px);
+  letter-spacing:.02em;text-align:center;line-height:1.2}
+.logo-ph small{display:block;font-weight:700;font-size:.74em;color:#aab4b1;text-transform:uppercase;letter-spacing:.14em;margin-top:.2em}
+</style>
+</head>
+<body>
+
+<!-- ICON SPRITE -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-pill" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="8" rx="4"/><line x1="12" y1="8" x2="12" y2="16"/></symbol>
+<symbol id="i-bug" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="5.5" ry="7"/><path d="M12 5V2M12 22v-3M6.5 8 4 6M17.5 8 20 6M6.5 16 4 18M17.5 16 20 18"/><circle cx="10.5" cy="10" r=".6" fill="currentColor"/><circle cx="13" cy="13" r=".6" fill="currentColor"/></symbol>
+<symbol id="i-child" viewBox="0 0 24 24"><circle cx="12" cy="6.5" r="3"/><path d="M6 21c0-4 2.7-7 6-7s6 3 6 7"/></symbol>
+<symbol id="i-hospital" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="17" rx="2"/><path d="M12 8v6M9 11h6M9 21v-3h6v3"/></symbol>
+<symbol id="i-house" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></symbol>
+<symbol id="i-paw" viewBox="0 0 24 24"><circle cx="7" cy="9" r="1.7"/><circle cx="12" cy="7" r="1.7"/><circle cx="17" cy="9" r="1.7"/><path d="M8 16c0-2.2 1.8-4 4-4s4 1.8 4 4-1.8 3.5-4 3.5S8 18.2 8 16Z"/></symbol>
+<symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14Z"/><path d="M5 19C9 15 13 11 17 9"/></symbol>
+<symbol id="i-hand" viewBox="0 0 24 24"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11m0-1V4.5a1.5 1.5 0 0 1 3 0V11m0-.5V6a1.5 1.5 0 0 1 3 0v8c0 3.3-2.4 6-6 6s-6-2-6.5-4.5L4.4 13a1.6 1.6 0 0 1 2.6-1.8L9 13"/></symbol>
+<symbol id="i-syringe" viewBox="0 0 24 24"><path d="m14 4 6 6M16 6l-9 9-3 5 5-3 9-9M9 9l3 3"/></symbol>
+<symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-11"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6 18 18M18 6 6 18"/></symbol>
+<symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></symbol>
+<symbol id="i-nurse" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.2"/><path d="M12 5.5v3M10.5 7h3"/><path d="M5.5 21c0-4 2.9-7 6.5-7s6.5 3 6.5 7"/></symbol>
+<symbol id="i-mask" viewBox="0 0 24 24"><path d="M4 8c3-1 5-1 8-1s5 0 8 1v4c0 4-4 7-8 7s-8-3-8-7V8Z"/><path d="M8 11h8M8 14h8M4 9 2 8m18 1 2-1"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+<symbol id="i-lungs" viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M12 8c-1 4-1.5 5-4 6-2 .8-3-.5-3-3 0-3 1.5-6 3.5-6 2 0 3.5 1 3.5 3Z"/><path d="M12 8c1 4 1.5 5 4 6 2 .8 3-.5 3-3 0-3-1.5-6-3.5-6-2 0-3.5 1-3.5 3Z"/></symbol>
+<symbol id="i-ear" viewBox="0 0 24 24"><path d="M7 9a5 5 0 0 1 10 0c0 3-2.5 4-3.5 5.5S12 18 10.5 18 8 16.5 8 16"/><path d="M11 9a1.8 1.8 0 0 1 3 1.3"/></symbol>
+<symbol id="i-virus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 7V3M12 21v-4M7 12H3m18 0h-4M8.5 8.5 6 6m12 12-2.5-2.5m0-7L18 6M6 18l2.5-2.5"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.5 6 3.5 9S14.5 18.5 12 21c-2.5-2.5-3.5-6-3.5-9S9.5 5.5 12 3Z"/></symbol>
+<symbol id="i-euro" viewBox="0 0 24 24"><path d="M16 7a6 6 0 1 0 0 10M5 10.5h8M5 13.5h8"/></symbol>
+<symbol id="i-cost" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v10M14.5 9.3C14 8.2 13 7.7 12 7.7c-1.4 0-2.4.8-2.4 2s1 1.8 2.4 2 2.4.8 2.4 2-1 2-2.4 2c-1.1 0-2.1-.6-2.6-1.7"/></symbol>
+<symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 8v11M3 12h18v7M21 12v-2a2 2 0 0 0-2-2H9v4"/><circle cx="6.5" cy="10" r="1.5"/></symbol>
+<symbol id="i-edu" viewBox="0 0 24 24"><path d="M3 8.5 12 4l9 4.5L12 13 3 8.5Z"/><path d="M7 10.5V15c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5v-4.5M21 8.5V14"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.7"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-q" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 .9-1 1.7"/><circle cx="12" cy="16.5" r=".6" fill="currentColor"/></symbol>
+</svg>
+
+<div class="stage" id="stage">
+<!-- 1 ABERTURA -->
+<section class="scene scene--ink2">
+ <div class="scene-inner" style="text-align:center">
+  <div class="logo-slot r" style="--d:0">
+    <img id="brandLogo" alt="Hospital da Luz Lisboa">
+    <span class="logo-ph">Hospital da Luz Lisboa<small>logótipo</small></span>
+  </div>
+  <div class="r" style="--d:120;display:flex;justify-content:center;align-items:center;gap:clamp(14px,2.5vw,30px);margin-bottom:clamp(20px,3vw,38px)">
+    <span class="icwrap" style="background:rgba(143,201,232,.16);color:var(--sky)"><svg class="ic"><use href="#i-child"/></svg></span>
+    <span class="capsule pop" style="--d:250"></span>
+    <span class="icwrap coral pop" style="--d:450"><svg class="ic"><use href="#i-bug"/></svg></span>
+  </div>
+  <div class="r" style="--d:120">
+    <span class="eyebrow" style="justify-content:center;margin-bottom:.55rem">Antimicrobial Stewardship (AMS)</span>
+    <div class="small" style="font-weight:700;letter-spacing:.02em;color:rgba(255,255,255,.72)">Formação e-learning · Serviço de Atendimento Urgente Pediátrico</div>
+  </div>
+  <h1 class="display r" style="--d:220;max-width:18ch;margin-inline:auto">Antibióticos: estamos a perder uma das maiores conquistas da medicina?</h1>
+  <p class="lede r" style="--d:520;margin:clamp(22px,3vw,34px) auto 0">Sem antimicrobianos eficazes, uma simples infeção pode voltar a matar.</p>
+  <div class="r" style="--d:780;margin-top:clamp(26px,3.4vw,40px);line-height:1.55;font-weight:700;font-size:clamp(12.5px,1.5vw,16px);color:rgba(255,255,255,.82)">
+    <span style="display:block;font-family:var(--display);color:var(--teal-l);text-transform:uppercase;letter-spacing:.16em;font-size:.82em;margin-bottom:.35em">Formador</span>
+    Carlos Dias · Enfermeiro especialista — Serviço de Atendimento Urgente Pediátrico<br>
+    Liaison Officer · projeto EU-JAMRAI II (Direção-Geral da Saúde)
+  </div>
+ </div>
+</section>
+
+<!-- 2 DESAFIO GLOBAL -->
+<section class="scene">
+ <div class="scene-inner">
+  <span class="eyebrow r" style="--d:0">O desafio global</span>
+  <h2 class="head r" style="--d:80;margin-bottom:clamp(22px,3vw,40px)">O que mata mais pessoas na Europa?</h2>
+  <div class="bars">
+    <div class="bar r" style="--d:200"><span>Acidentes rodoviários</span><div class="track"><div class="fill" style="--w:55%"></div></div><span class="val">~20 mil</span></div>
+    <div class="bar r" style="--d:320"><span>Gripe sazonal</span><div class="track"><div class="fill" style="--w:70%"></div></div><span class="val">~27 mil</span></div>
+    <div class="bar crit r" style="--d:440"><span>Resistência antimicrobiana</span><div class="track"><div class="fill" style="--w:100%"></div></div><span class="val">35 mil+</span></div>
+  </div>
+  <div style="margin-top:clamp(26px,3.4vw,44px)" class="r" >
+    <span class="keymsg coral" style="--d:900">Mais de 35.000 mortes por ano na UE/EEE associadas à resistência antimicrobiana.</span>
+  </div>
+  <p class="source r" style="--d:1000">Fonte: ECDC · EU-JAMRAI II · estimativas anuais UE/EEE</p>
+ </div>
+</section>
+
+<!-- 3 O QUE É A RAM -->
+<section class="scene">
+ <div class="scene-inner" style="display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,4vw,56px);align-items:center">
+  <div>
+   <span class="eyebrow r" style="--d:0">O mecanismo</span>
+   <h2 class="head r" style="--d:80">O que é a resistência antimicrobiana?</h2>
+   <p class="lede r" style="--d:220;margin-top:1rem">Os microrganismos evoluem. Quanto mais usamos antimicrobianos de forma inadequada, maior a <strong class="hl">pressão seletiva</strong> — sobrevivem os mais resistentes, e multiplicam-se.</p>
+   <div style="margin-top:clamp(18px,2.4vw,28px)" class="r"><span class="keymsg" style="--d:600">Não é o doente que fica resistente. São as bactérias.</span></div>
+  </div>
+  <div class="r" style="--d:300;text-align:center">
+   <div class="colony" id="colony" style="margin-inline:auto"></div>
+   <div class="small muted" style="margin-top:1rem;display:flex;justify-content:center;gap:1.4em;flex-wrap:wrap">
+     <span><span style="color:var(--teal-l)">●</span> sensíveis (morrem)</span>
+     <span><span style="color:var(--coral)">●</span> resistentes (sobrevivem e multiplicam-se)</span>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 4 PORQUE A PEDIATRIA -->
+<section class="scene">
+ <div class="scene-inner">
+  <span class="eyebrow r" style="--d:0">Porque é que a pediatria importa</span>
+  <h2 class="head r" style="--d:80;margin-bottom:clamp(8px,1.4vw,16px)">Muitos antibióticos. Muitos desnecessários.</h2>
+  <p class="lede r" style="--d:180">As infeções respiratórias são uma das principais causas de prescrição. <strong class="hl">Muitas são virais</strong> — e a criança recebe, com frequência, antibiótico que não precisa.</p>
+  <div class="grid r" style="--d:340;grid-template-columns:repeat(4,1fr);margin-top:clamp(22px,3vw,38px)">
+    <div class="card" style="text-align:center"><span class="icwrap" style="margin:0 auto .6em"><svg class="ic"><use href="#i-ear"/></svg></span><h3>Otite</h3><p>Avaliar</p></div>
+    <div class="card" style="text-align:center"><span class="icwrap" style="margin:0 auto .6em"><svg class="ic"><use href="#i-lungs"/></svg></span><h3>Bronquiolite</h3><p>Viral</p></div>
+    <div class="card" style="text-align:center"><span class="icwrap" style="margin:0 auto .6em"><svg class="ic"><use href="#i-virus"/></svg></span><h3>Faringite</h3><p>Avaliar</p></div>
+    <div class="card" style="text-align:center"><span class="icwrap" style="margin:0 auto .6em"><svg class="ic"><use href="#i-lungs"/></svg></span><h3>Pneumonia</h3><p>Avaliar</p></div>
+  </div>
+  <div style="margin-top:clamp(22px,3vw,34px);display:flex;gap:14px;flex-wrap:wrap" class="r">
+    <span class="pill r" style="--d:560"><svg class="ic"><use href="#i-virus"/></svg> Viral ≠ antibiótico</span>
+    <span class="pill coral r" style="--d:660"><svg class="ic"><use href="#i-bug"/></svg> Bacteriana = avaliar</span>
+  </div>
+ </div>
+</section>
+
+<!-- 5 ONDE NASCE A RESISTENCIA / ONE HEALTH -->
+<section class="scene scene--teal">
+ <div class="scene-inner" style="text-align:center">
+  <span class="eyebrow r" style="--d:0;justify-content:center">Onde nasce a resistência</span>
+  <h2 class="head r" style="--d:80;margin-bottom:clamp(24px,3vw,40px)">A resistência não vive num só lugar.</h2>
+  <div class="flow r" style="--d:240;justify-content:center;color:#fff">
+    <div class="node"><span class="icwrap" style="background:rgba(255,255,255,.18);color:#fff"><svg class="ic"><use href="#i-hospital"/></svg></span>Hospital</div>
+    <span class="arr" style="color:#cdeee9">+</span>
+    <div class="node"><span class="icwrap" style="background:rgba(255,255,255,.18);color:#fff"><svg class="ic"><use href="#i-house"/></svg></span>Comunidade</div>
+    <span class="arr" style="color:#cdeee9">+</span>
+    <div class="node"><span class="icwrap" style="background:rgba(255,255,255,.18);color:#fff"><svg class="ic"><use href="#i-paw"/></svg></span>Animais</div>
+    <span class="arr" style="color:#cdeee9">+</span>
+    <div class="node"><span class="icwrap" style="background:rgba(255,255,255,.18);color:#fff"><svg class="ic"><use href="#i-leaf"/></svg></span>Ambiente</div>
+  </div>
+  <div style="margin-top:clamp(28px,3.6vw,48px)" class="r"><span class="keymsg" style="--d:720;background:#fff;color:var(--teal-d)"><svg class="ic" style="display:inline;vertical-align:-2px;font-size:1.1em;margin-right:.3em"><use href="#i-globe"/></svg> ONE HEALTH — saúde humana, animal e ambiental estão interligadas.</span></div>
+  <p class="source r" style="--d:820">Enquadramento alinhado com os materiais EU-JAMRAI II</p>
+ </div>
+</section>
+
+<!-- 6 O QUE É O AMS -->
+<section class="scene">
+ <div class="scene-inner" style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px);align-items:center">
+  <div>
+   <span class="eyebrow r" style="--d:0">Antimicrobial Stewardship</span>
+   <h2 class="head r" style="--d:80">O que é o AMS?</h2>
+   <p class="lede r" style="--d:200;margin-top:1rem">Um conjunto de estratégias para garantir o <strong class="hl">uso correto</strong> dos antimicrobianos. Uma bússola para cada decisão.</p>
+  </div>
+  <div class="grid r" style="--d:300;grid-template-columns:1fr 1fr">
+   <div class="card" style="display:flex;align-items:center;gap:.7em"><span class="icwrap"><svg class="ic"><use href="#i-child"/></svg></span><div><h3 style="margin:0">Doente certo</h3></div></div>
+   <div class="card" style="display:flex;align-items:center;gap:.7em"><span class="icwrap"><svg class="ic"><use href="#i-pill"/></svg></span><div><h3 style="margin:0">Antibiótico certo</h3></div></div>
+   <div class="card" style="display:flex;align-items:center;gap:.7em"><span class="icwrap"><svg class="ic"><use href="#i-target"/></svg></span><div><h3 style="margin:0">Dose certa</h3></div></div>
+   <div class="card" style="display:flex;align-items:center;gap:.7em"><span class="icwrap"><svg class="ic"><use href="#i-syringe"/></svg></span><div><h3 style="margin:0">Via certa</h3></div></div>
+   <div class="card" style="display:flex;align-items:center;gap:.7em;grid-column:1/-1;justify-content:center"><span class="icwrap"><svg class="ic"><use href="#i-clock"/></svg></span><div><h3 style="margin:0">Duração certa</h3></div></div>
+  </div>
+ </div>
+</section>
+
+<!-- 7 PORQUE IMPORTA -->
+<section class="scene">
+ <div class="scene-inner">
+  <span class="eyebrow r" style="--d:0">O retorno</span>
+  <h2 class="head r" style="--d:80;margin-bottom:clamp(22px,3vw,38px)">Porque é que o AMS importa?</h2>
+  <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+   <div class="card r" style="--d:160;display:flex;align-items:center;gap:.7em"><span class="icwrap"><svg class="ic"><use href="#i-bug"/></svg></span><h3 style="margin:0;font-size:clamp(15px,1.7vw,19px)">Menos resistência</h3></div>
+   <div class="card r" style="--d:240;display:flex;align-items:center;gap:.7em"><span class="icwrap"><svg class="ic"><use href="#i-shield"/></svg></span><h3 style="margin:0;font-size:clamp(15px,1.7vw,19px)">Menos efeitos adversos</h3></div>
+   <div class="card r" style="--d:320;display:flex;align-items:center;gap:.7em"><span class="icwrap coral"><svg class="ic"><use href="#i-drop"/></svg></span><h3 style="margin:0;font-size:clamp(15px,1.7vw,19px)">Menos <i>C. difficile</i></h3></div>
+   <div class="card r" style="--d:400;display:flex;align-items:center;gap:.7em"><span class="icwrap"><svg class="ic"><use href="#i-bed"/></svg></span><h3 style="margin:0;font-size:clamp(15px,1.7vw,19px)">Menor internamento</h3></div>
+   <div class="card r" style="--d:480;display:flex;align-items:center;gap:.7em"><span class="icwrap"><svg class="ic"><use href="#i-nurse"/></svg></span><h3 style="margin:0;font-size:clamp(15px,1.7vw,19px)">Menor mortalidade</h3></div>
+   <div class="card r" style="--d:560;display:flex;align-items:center;gap:.7em"><span class="icwrap amber"><svg class="ic"><use href="#i-cost"/></svg></span><h3 style="margin:0;font-size:clamp(15px,1.7vw,19px)">Menores custos</h3></div>
+  </div>
+ </div>
+</section>
+
+<!-- 8 O PAPEL DO ENFERMEIRO -->
+<section class="scene scene--ink2">
+ <div class="scene-inner" style="text-align:center">
+  <span class="eyebrow r" style="--d:0;justify-content:center">O papel do enfermeiro</span>
+  <h2 class="head r" style="--d:80;margin-bottom:clamp(6px,1vw,14px)">O AMS não é só responsabilidade médica.</h2>
+  <p class="lede r" style="--d:160;margin:0 auto">Em cada turno, o enfermeiro está em todos os pontos de decisão.</p>
+  <div class="hub">
+    <div class="hub-col">
+      <div class="hub-card r pop" style="--d:340"><span class="icwrap"><svg class="ic"><use href="#i-syringe"/></svg></span>Administração segura</div>
+      <div class="hub-card r pop" style="--d:420"><span class="icwrap"><svg class="ic"><use href="#i-eye"/></svg></span>Monitorização</div>
+      <div class="hub-card r pop" style="--d:500"><span class="icwrap"><svg class="ic"><use href="#i-drop"/></svg></span>Colheitas</div>
+    </div>
+    <div class="hub-center r pop" style="--d:300">O enfermeiro<br>no centro</div>
+    <div class="hub-col">
+      <div class="hub-card r pop" style="--d:580"><span class="icwrap"><svg class="ic"><use href="#i-edu"/></svg></span>Educação</div>
+      <div class="hub-card r pop" style="--d:660"><span class="icwrap"><svg class="ic"><use href="#i-hand"/></svg></span>Prevenção</div>
+      <div class="hub-card r pop" style="--d:740"><span class="icwrap"><svg class="ic"><use href="#i-shield"/></svg></span>Vigilância</div>
+    </div>
+  </div>
+ </div>
+</section>
+
+<!-- 9 ANTES DO ANTIBIOTICO -->
+<section class="scene">
+ <div class="scene-inner" style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px);align-items:center">
+  <div>
+   <span class="eyebrow r" style="--d:0">Antes do antibiótico</span>
+   <h2 class="head r" style="--d:80">Uma boa colheita muda a decisão.</h2>
+   <div style="margin-top:clamp(16px,2vw,26px)">
+     <div class="checkline r" style="--d:220"><span class="box"><svg class="ic"><use href="#i-check"/></svg></span>Identificar sinais de infeção</div>
+     <div class="checkline r" style="--d:300"><span class="box"><svg class="ic"><use href="#i-check"/></svg></span>Garantir colheitas adequadas</div>
+     <div class="checkline r" style="--d:380"><span class="box"><svg class="ic"><use href="#i-check"/></svg></span>Efetuar colheita de sangue para hemoculturas corretamente</div>
+     <div class="checkline r" style="--d:460"><span class="box"><svg class="ic"><use href="#i-check"/></svg></span>Evitar contaminações</div>
+   </div>
+  </div>
+  <div class="card r" style="--d:340;background:#fbe4e0;border-color:#f0c4bc">
+   <span class="pill coral" style="margin-bottom:.8em"><svg class="ic"><use href="#i-bug"/></svg> Caso prático</span>
+   <p style="font-size:clamp(15px,1.8vw,20px);font-weight:700;color:var(--coral-d);line-height:1.4">Hemocultura contaminada <svg class="ic" style="display:inline;vertical-align:-3px;font-size:1em"><use href="#i-arrow"/></svg> falso positivo <svg class="ic" style="display:inline;vertical-align:-3px;font-size:1em"><use href="#i-arrow"/></svg> <span style="color:var(--ink)">antibiótico desnecessário</span></p>
+   <p class="small muted" style="margin-top:.8em;color:var(--coral-d)">A técnica do enfermeiro evita dias de tratamento que nunca deveriam ter começado.</p>
+  </div>
+ </div>
+</section>
+
+<!-- 10 DURANTE O TRATAMENTO (checklist) -->
+<section class="scene scene--dark">
+ <div class="scene-inner">
+  <span class="eyebrow r" style="--d:0">Durante o tratamento</span>
+  <h2 class="head r" style="--d:80;margin-bottom:clamp(20px,2.6vw,34px)">A checklist de cada administração</h2>
+  <div class="grid" style="grid-template-columns:1fr 1fr;gap:clamp(10px,1.4vw,16px)">
+   <div class="checkline r" style="--d:180"><span class="box"><svg class="ic"><use href="#i-check"/></svg></span>Confirmar alergias</div>
+   <div class="checkline r" style="--d:250"><span class="box"><svg class="ic"><use href="#i-check"/></svg></span>Confirmar dose</div>
+   <div class="checkline r" style="--d:320"><span class="box"><svg class="ic"><use href="#i-check"/></svg></span>Confirmar horário</div>
+   <div class="checkline r" style="--d:390"><span class="box"><svg class="ic"><use href="#i-check"/></svg></span>Confirmar diluição</div>
+   <div class="checkline r" style="--d:460"><span class="box"><svg class="ic"><use href="#i-check"/></svg></span>Confirmar compatibilidades</div>
+   <div class="checkline r" style="--d:530"><span class="box"><svg class="ic"><use href="#i-check"/></svg></span>Vigiar efeitos adversos</div>
+  </div>
+ </div>
+</section>
+
+<!-- 11 SWITCH IV -> ORAL -->
+<section class="scene">
+ <div class="scene-inner">
+  <span class="eyebrow r" style="--d:0">Via de administração</span>
+  <h2 class="head r" style="--d:80;margin-bottom:clamp(6px,1vw,14px)">Endovenosa ou oral?</h2>
+  <p class="lede r" style="--d:180">Quando a criança melhora, precisamos mesmo de continuar EV?</p>
+  <div class="flow r" style="--d:340;justify-content:center;margin:clamp(24px,3.2vw,42px) 0">
+    <div class="node"><span class="icwrap coral" style="font-size:clamp(26px,3vw,36px)"><svg class="ic"><use href="#i-syringe"/></svg></span>Cateter EV</div>
+    <span class="arr"><svg class="ic" style="font-size:1em"><use href="#i-arrow"/></svg></span>
+    <span class="pill amber" style="font-size:clamp(13px,1.6vw,17px)">Switch IV → Oral</span>
+    <span class="arr"><svg class="ic" style="font-size:1em"><use href="#i-arrow"/></svg></span>
+    <div class="node"><span class="icwrap" style="font-size:clamp(26px,3vw,36px)"><svg class="ic"><use href="#i-pill"/></svg></span>Comprimido / xarope</div>
+  </div>
+  <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+   <div class="card r" style="--d:560;text-align:center"><h3 style="color:var(--teal-d)">Menos complicações</h3><p>sem acessos desnecessários</p></div>
+   <div class="card r" style="--d:640;text-align:center"><h3 style="color:var(--teal-d)">Menos internamento</h3><p>alta mais precoce</p></div>
+   <div class="card r" style="--d:720;text-align:center"><h3 style="color:var(--teal-d)">Menos custos</h3><p>para o doente e o serviço</p></div>
+  </div>
+ </div>
+</section>
+
+<!-- 12 PREVENIR / Prevencao e Controlo de Infecao -->
+<section class="scene scene--ink2">
+ <div class="scene-inner" style="text-align:center">
+  <span class="eyebrow r" style="--d:0;justify-content:center">Prevenção e Controlo de Infeção</span>
+  <h2 class="head r" style="--d:80;margin-bottom:clamp(22px,3vw,38px)">Prevenir é o melhor antibiótico.</h2>
+  <div style="display:flex;justify-content:center;gap:clamp(14px,2.4vw,30px);flex-wrap:wrap;margin-bottom:clamp(24px,3vw,40px)">
+   <div class="node r" style="--d:180;display:flex;flex-direction:column;align-items:center;gap:.5em;font-weight:700;font-size:clamp(12px,1.4vw,15px)"><span class="icwrap" style="background:rgba(63,176,164,.16);color:var(--teal-l)"><svg class="ic"><use href="#i-hand"/></svg></span>Higiene das mãos</div>
+   <div class="node r" style="--d:260;display:flex;flex-direction:column;align-items:center;gap:.5em;font-weight:700;font-size:clamp(12px,1.4vw,15px)"><span class="icwrap" style="background:rgba(63,176,164,.16);color:var(--teal-l)"><svg class="ic"><use href="#i-syringe"/></svg></span>Vacinação</div>
+   <div class="node r" style="--d:340;display:flex;flex-direction:column;align-items:center;gap:.5em;font-weight:700;font-size:clamp(12px,1.4vw,15px)"><span class="icwrap" style="background:rgba(63,176,164,.16);color:var(--teal-l)"><svg class="ic"><use href="#i-mask"/></svg></span>Etiqueta respiratória</div>
+   <div class="node r" style="--d:420;display:flex;flex-direction:column;align-items:center;gap:.5em;font-weight:700;font-size:clamp(12px,1.4vw,15px)"><span class="icwrap" style="background:rgba(63,176,164,.16);color:var(--teal-l)"><svg class="ic"><use href="#i-shield"/></svg></span>Equip. de proteção</div>
+   <div class="node r" style="--d:500;display:flex;flex-direction:column;align-items:center;gap:.5em;font-weight:700;font-size:clamp(12px,1.4vw,15px)"><span class="icwrap" style="background:rgba(63,176,164,.16);color:var(--teal-l)"><svg class="ic"><use href="#i-hospital"/></svg></span>Isolamento</div>
+  </div>
+  <div class="r"><span class="keymsg" style="--d:680">A infeção evitada é o antibiótico que nunca precisou de ser usado.</span></div>
+ </div>
+</section>
+
+<!-- 13 CASO CLINICO INTERATIVO -->
+<section class="scene">
+ <div class="scene-inner" style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px);align-items:center">
+  <div>
+   <span class="eyebrow r" style="--d:0">Caso clínico interativo</span>
+   <h2 class="head r" style="--d:80">Menino, 4 anos</h2>
+   <div style="margin-top:clamp(14px,1.8vw,24px);display:flex;flex-wrap:wrap;gap:10px" class="r">
+     <span class="pill r" style="--d:200"><svg class="ic"><use href="#i-drop"/></svg> Febre</span>
+     <span class="pill r" style="--d:260"><svg class="ic"><use href="#i-lungs"/></svg> Tosse</span>
+     <span class="pill r" style="--d:320"><svg class="ic"><use href="#i-virus"/></svg> Coriza</span>
+     <span class="pill r" style="--d:380" >Boa saturação</span>
+     <span class="pill r" style="--d:440">Bom estado geral</span>
+   </div>
+  </div>
+  <div class="tap card r" style="--d:340;text-align:center;min-height:clamp(180px,24vw,240px);display:flex;flex-direction:column;justify-content:center;border:2px dashed var(--teal-l)">
+   <div class="front">
+     <span class="icwrap amber" style="margin:0 auto 1em"><svg class="ic"><use href="#i-q"/></svg></span>
+     <h3 style="font-size:clamp(18px,2.2vw,24px)">Precisa de antibiótico?</h3>
+     <p class="muted" style="margin-top:.6em">Toque para revelar o raciocínio</p>
+   </div>
+   <div class="back">
+     <span class="icwrap" style="margin:0 auto 1em;background:#e3f2ef;color:var(--teal-d)"><svg class="ic"><use href="#i-check"/></svg></span>
+     <h3 style="font-size:clamp(18px,2.2vw,24px);color:var(--teal-d)">Provavelmente não.</h3>
+     <p class="small" style="margin-top:.6em">Quadro viral típico, sem sinais de gravidade. A vigilância e o conforto são a abordagem — o antibiótico não atua sobre vírus.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 14 MITOS E REALIDADES -->
+<section class="scene scene--dark">
+ <div class="scene-inner">
+  <span class="eyebrow r" style="--d:0">Mitos &amp; realidades</span>
+  <h2 class="head r" style="--d:80;margin-bottom:clamp(18px,2.4vw,32px)">Toque para virar cada carta.</h2>
+  <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+   <div class="tap card r" style="--d:200;min-height:clamp(150px,18vw,190px)">
+     <div class="front"><span class="pill coral" style="margin-bottom:.7em">Mito</span><p style="font-weight:700;font-size:clamp(15px,1.8vw,19px);color:var(--paper)">Febre alta = antibiótico</p></div>
+     <div class="back"><span class="pill amber" style="margin-bottom:.7em">Realidade</span><p style="font-weight:700;color:var(--amber)">Nem sempre. A febre é uma resposta — não diz, por si só, se há bactéria.</p></div>
+   </div>
+   <div class="tap card r" style="--d:300;min-height:clamp(150px,18vw,190px)">
+     <div class="front"><span class="pill coral" style="margin-bottom:.7em">Mito</span><p style="font-weight:700;font-size:clamp(15px,1.8vw,19px);color:var(--paper)">Expetoração verde = antibiótico</p></div>
+     <div class="back"><span class="pill amber" style="margin-bottom:.7em">Realidade</span><p style="font-weight:700;color:var(--amber)">Nem sempre. A cor não distingue infeção viral de bacteriana.</p></div>
+   </div>
+   <div class="tap card r" style="--d:400;min-height:clamp(150px,18vw,190px)">
+     <div class="front"><span class="pill coral" style="margin-bottom:.7em">Mito</span><p style="font-weight:700;font-size:clamp(15px,1.8vw,19px);color:var(--paper)">Quanto mais forte, melhor</p></div>
+     <div class="back"><span class="pill amber" style="margin-bottom:.7em">Realidade</span><p style="font-weight:700;color:var(--amber)">Nem sempre. O espetro largo desnecessário gera mais resistência.</p></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 15 EU-JAMRAI II -->
+<section class="scene scene--teal">
+ <div class="scene-inner">
+  <span class="eyebrow r" style="--d:0">Joint Action Europeia</span>
+  <h2 class="head r" style="--d:80">EU-JAMRAI II</h2>
+  <p class="lede r" style="--d:200;margin-top:1rem;color:rgba(255,255,255,.92)">Ação conjunta europeia contra a resistência antimicrobiana e as infeções associadas aos cuidados de saúde.</p>
+  <div class="grid r" style="--d:340;grid-template-columns:repeat(3,1fr);margin-top:clamp(22px,3vw,38px)">
+    <div class="card" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);text-align:center">
+      <div style="font-family:var(--display);font-weight:800;font-size:clamp(30px,4vw,46px);color:#fff">120+</div><p style="color:rgba(255,255,255,.85)">organizações</p></div>
+    <div class="card" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);text-align:center">
+      <div style="font-family:var(--display);font-weight:800;font-size:clamp(30px,4vw,46px);color:#fff">30</div><p style="color:rgba(255,255,255,.85)">países</p></div>
+    <div class="card" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);text-align:center">
+      <span class="icwrap" style="background:rgba(255,255,255,.18);color:#fff;margin:0 auto .3em"><svg class="ic"><use href="#i-euro"/></svg></span><p style="color:rgba(255,255,255,.85)">Financiamento EU4Health</p></div>
+  </div>
+  <div style="margin-top:clamp(20px,2.6vw,32px)" class="r"><span class="keymsg" style="--d:560;background:#fff;color:var(--teal-d)">Missão: transformar políticas em implementação prática.</span></div>
+ </div>
+</section>
+
+<!-- 16 WP6 -->
+<section class="scene">
+ <div class="scene-inner" style="display:grid;grid-template-columns:.95fr 1.05fr;gap:clamp(24px,4vw,56px);align-items:center">
+  <div>
+   <span class="eyebrow r" style="--d:0">EU-JAMRAI II · WP6</span>
+   <h2 class="head r" style="--d:80">Antimicrobial Stewardship</h2>
+   <p class="lede r" style="--d:200;margin-top:1rem">Melhorar a utilização dos antimicrobianos na Europa — da formação à prática à cabeceira.</p>
+  </div>
+  <div class="grid r" style="--d:320;grid-template-columns:1fr 1fr">
+   <div class="card" style="display:flex;align-items:center;gap:.6em"><span class="icwrap"><svg class="ic"><use href="#i-edu"/></svg></span><h3 style="margin:0;font-size:clamp(14px,1.6vw,18px)">Formação</h3></div>
+   <div class="card" style="display:flex;align-items:center;gap:.6em"><span class="icwrap"><svg class="ic"><use href="#i-nurse"/></svg></span><h3 style="margin:0;font-size:clamp(14px,1.6vw,18px)">Capacitação</h3></div>
+   <div class="card" style="display:flex;align-items:center;gap:.6em"><span class="icwrap"><svg class="ic"><use href="#i-target"/></svg></span><h3 style="margin:0;font-size:clamp(14px,1.6vw,18px)">Competências</h3></div>
+   <div class="card" style="display:flex;align-items:center;gap:.6em"><span class="icwrap"><svg class="ic"><use href="#i-check"/></svg></span><h3 style="margin:0;font-size:clamp(14px,1.6vw,18px)">Boas práticas</h3></div>
+   <div class="card" style="display:flex;align-items:center;gap:.6em;grid-column:1/-1;justify-content:center"><span class="icwrap amber"><svg class="ic"><use href="#i-shield"/></svg></span><h3 style="margin:0;font-size:clamp(14px,1.6vw,18px)">Ferramentas de AMS</h3></div>
+  </div>
+ </div>
+</section>
+
+<!-- 17 O QUE POSSO FAZER AMANHA -->
+<section class="scene">
+ <div class="scene-inner">
+  <span class="eyebrow r" style="--d:0">Da teoria à prática</span>
+  <h2 class="head r" style="--d:80;margin-bottom:clamp(20px,2.8vw,36px)">O que posso fazer amanhã?</h2>
+  <div class="grid" style="gap:clamp(8px,1.2vw,14px)">
+   <div class="card r" style="--d:180;display:flex;align-items:center;gap:1em"><span style="font-family:var(--display);font-weight:800;font-size:clamp(22px,2.6vw,32px);color:var(--coral)">1</span><span class="icwrap"><svg class="ic"><use href="#i-drop"/></svg></span><h3 style="margin:0;font-size:clamp(16px,1.9vw,21px)">Promover colheitas corretas</h3></div>
+   <div class="card r" style="--d:260;display:flex;align-items:center;gap:1em"><span style="font-family:var(--display);font-weight:800;font-size:clamp(22px,2.6vw,32px);color:var(--coral)">2</span><span class="icwrap"><svg class="ic"><use href="#i-q"/></svg></span><h3 style="margin:0;font-size:clamp(16px,1.9vw,21px)">Questionar utilização inadequada</h3></div>
+   <div class="card r" style="--d:340;display:flex;align-items:center;gap:1em"><span style="font-family:var(--display);font-weight:800;font-size:clamp(22px,2.6vw,32px);color:var(--coral)">3</span><span class="icwrap"><svg class="ic"><use href="#i-syringe"/></svg></span><h3 style="margin:0;font-size:clamp(16px,1.9vw,21px)">Garantir administração segura</h3></div>
+   <div class="card r" style="--d:420;display:flex;align-items:center;gap:1em"><span style="font-family:var(--display);font-weight:800;font-size:clamp(22px,2.6vw,32px);color:var(--coral)">4</span><span class="icwrap"><svg class="ic"><use href="#i-edu"/></svg></span><h3 style="margin:0;font-size:clamp(16px,1.9vw,21px)">Educar as famílias</h3></div>
+   <div class="card r" style="--d:500;display:flex;align-items:center;gap:1em"><span style="font-family:var(--display);font-weight:800;font-size:clamp(22px,2.6vw,32px);color:var(--coral)">5</span><span class="icwrap"><svg class="ic"><use href="#i-hand"/></svg></span><h3 style="margin:0;font-size:clamp(16px,1.9vw,21px)">Cumprir as medidas de prevenção e controlo de infeção</h3></div>
+  </div>
+ </div>
+</section>
+
+<!-- 18 MENSAGEM FINAL -->
+<section class="scene scene--ink2">
+ <div class="scene-inner" style="text-align:center">
+  <div class="r" style="--d:0;display:flex;justify-content:center;gap:clamp(12px,2vw,24px);margin-bottom:clamp(24px,3vw,40px)">
+    <span class="icwrap pop" style="--d:200;background:rgba(143,201,232,.16);color:var(--sky)"><svg class="ic"><use href="#i-child"/></svg></span>
+    <span class="icwrap pop" style="--d:340;background:rgba(63,176,164,.16);color:var(--teal-l)"><svg class="ic"><use href="#i-nurse"/></svg></span>
+    <span class="icwrap pop" style="--d:480;background:rgba(242,179,60,.16);color:var(--amber)"><svg class="ic"><use href="#i-globe"/></svg></span>
+  </div>
+  <h2 class="head r" style="--d:240;max-width:20ch;margin-inline:auto">O futuro dos antibióticos depende das decisões que tomamos hoje.</h2>
+  <p class="lede r" style="--d:600;margin:clamp(20px,2.6vw,32px) auto 0">Criança saudável · equipa multidisciplinar · One Health.</p>
+ </div>
+</section>
+
+<!-- 19 QUIZ -->
+<section class="scene">
+ <div class="scene-inner" id="quiz">
+  <span class="eyebrow r" style="--d:0">Quiz final</span>
+  <div class="qprog r" id="qprog" style="--d:60;margin-bottom:.8rem"></div>
+  <div class="quiz-q r" id="qn" style="--d:120"></div>
+  <div class="quiz-opts r" id="qopts" style="--d:200"></div>
+  <div class="qfb" id="qfb"></div>
+ </div>
+</section>
+
+<!-- 20 ENCERRAMENTO -->
+<section class="scene scene--dark">
+ <div class="scene-inner" style="text-align:center">
+  <span class="capsule r pop" style="--d:0;margin:0 auto clamp(20px,3vw,34px)"></span>
+  <h2 class="head r" style="--d:160">Obrigado.</h2>
+  <p class="lede r" style="--d:320;margin:clamp(16px,2vw,24px) auto clamp(20px,2.6vw,32px)">Cada antibiótico conta. O enfermeiro tem um papel crítico.</p>
+  <div class="r" style="--d:480;font-weight:700;line-height:1.7;font-size:clamp(14px,1.7vw,18px)">
+    <div style="font-family:var(--display);font-size:clamp(18px,2.2vw,24px);color:var(--amber)">Carlos Dias</div>
+    <div class="muted" style="color:rgba(255,255,255,.78)">Enfermeiro especialista · Serviço de Atendimento Urgente Pediátrico</div>
+    <div class="muted" style="color:rgba(255,255,255,.78)">Liaison Officer · projeto EU-JAMRAI II</div>
+    <div class="muted" style="color:rgba(255,255,255,.78)">Direção-Geral da Saúde</div>
+  </div>
+  <p class="source r" style="--d:620">Referências: OMS · ECDC · EU-JAMRAI II · Programa PPCIRA (DGS) · Estratégia One Health</p>
+ </div>
+</section>
+
+</div>
+
+<div class="chrome">
+  <div class="brand"><span class="dotmark"></span> AMS · Atendimento Urgente Pediátrico</div>
+  <div class="counter"><span id="cur">01</span> / <span id="tot">20</span></div>
+</div>
+
+<div class="dots" id="dots" aria-hidden="true"></div>
+<div class="hint" id="hint">→ / espaço para avançar · ← para voltar</div>
+<div class="nav">
+  <button id="prev" aria-label="Slide anterior"><svg class="ic" style="transform:rotate(180deg)"><use href="#i-arrow"/></svg></button>
+  <button id="next" aria-label="Slide seguinte"><svg class="ic"><use href="#i-arrow"/></svg></button>
+</div>
+<div class="progress" id="progbar"></div>
+
+<script>
+(function(){
+  const stage=document.getElementById('stage');
+  const scenes=[...stage.querySelectorAll('.scene')];
+  const N=scenes.length;
+  let cur=0;
+  const curEl=document.getElementById('cur');
+  const totEl=document.getElementById('tot');
+  const dotsEl=document.getElementById('dots');
+  const prevB=document.getElementById('prev');
+  const nextB=document.getElementById('next');
+  const prog=document.getElementById('progbar');
+  const hint=document.getElementById('hint');
+  totEl.textContent=String(N).padStart(2,'0');
+
+  scenes.forEach((s,i)=>{
+    const d=document.createElement('button');
+    d.className='dot';d.setAttribute('aria-label','Ir para slide '+(i+1));
+    d.addEventListener('click',()=>go(i));
+    dotsEl.appendChild(d);
+  });
+  const dots=[...dotsEl.children];
+
+  function render(){
+    scenes.forEach((s,i)=>{
+      s.classList.toggle('is-active',i===cur);
+      s.classList.toggle('is-before',i<cur);
+      s.classList.toggle('is-after',i>cur);
+    });
+    dots.forEach((d,i)=>d.classList.toggle('on',i===cur));
+    curEl.textContent=String(cur+1).padStart(2,'0');
+    prog.style.width=((cur)/(N-1)*100)+'%';
+    prevB.disabled=cur===0;nextB.disabled=cur===N-1;
+    const dark=scenes[cur].matches('.scene--dark,.scene--ink2,.scene--teal');
+    document.body.classList.toggle('scene-dark-mode',dark);
+    if(cur>0){hint.style.opacity='0';}
+  }
+  function go(i){cur=Math.max(0,Math.min(N-1,i));render();}
+  function next(){if(cur<N-1)go(cur+1);}
+  function prev(){if(cur>0)go(cur-1);}
+
+  nextB.addEventListener('click',next);
+  prevB.addEventListener('click',prev);
+  window.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();next();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}
+    else if(e.key==='Home'){go(0);}else if(e.key==='End'){go(N-1);}
+  });
+  // swipe
+  let x0=null;
+  stage.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
+  stage.addEventListener('touchend',e=>{
+    if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>50){dx<0?next():prev();}x0=null;
+  },{passive:true});
+  // click right/left third to navigate (ignore interactive els)
+  stage.addEventListener('click',e=>{
+    if(e.target.closest('button,.tap,.qopt,a'))return;
+    const r=e.clientX/window.innerWidth;
+    if(r>0.66)next();else if(r<0.34)prev();
+  });
+
+  /* ---- selection colony ---- */
+  const colony=document.getElementById('colony');
+  if(colony){
+    const live=new Set([34,57,92,118,143]);
+    const grow=[35,36,54,55,58,77,93,94,111,117,119,138,142,144,162,163];
+    for(let i=0;i<200;i++){
+      const b=document.createElement('span');b.className='b';b.style.setProperty('--i',i);
+      if(live.has(i))b.classList.add('live');
+      else if(grow.includes(i))b.classList.add('grow');
+      else b.classList.add('die');
+      colony.appendChild(b);
+    }
+  }
+
+  /* ---- tap-to-reveal cards ---- */
+  document.querySelectorAll('.tap').forEach(t=>{
+    t.setAttribute('tabindex','0');t.setAttribute('role','button');
+    const toggle=()=>t.classList.toggle('open');
+    t.addEventListener('click',e=>{e.stopPropagation();toggle();});
+    t.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+  });
+
+  /* ---- QUIZ ---- */
+  const quizData=[
+    {q:"A resistência antimicrobiana desenvolve-se… em quem?",opts:[["No doente","Não. Quem se torna resistente são as bactérias, não a pessoa."],["Nas bactérias","Exato. É a população bacteriana que evolui sob pressão seletiva."]],a:1},
+    {q:"Uma bronquiolite típica precisa de antibiótico?",opts:[["Não","Correto. A bronquiolite é viral — o antibiótico não atua."],["Sim, sempre","Não. Sendo viral, o antibiótico não traz benefício."]],a:0},
+    {q:"O enfermeiro tem papel no AMS?",opts:[["Sim, central","Sim. Colheitas, administração segura, vigilância e educação são AMS."],["Não, é só médico","Não. O AMS é uma responsabilidade de toda a equipa."]],a:0},
+    {q:"A higiene das mãos contribui para o AMS?",opts:[["Sim","Sim. A infeção evitada é o antibiótico que nunca foi preciso."],["Não","Contribui — prevenir infeções reduz o uso de antimicrobianos."]],a:0},
+    {q:"O conceito One Health inclui o ambiente?",opts:[["Sim","Sim. Integra saúde humana, animal e ambiental."],["Só humana e animal","Inclui também o ambiente — os três estão interligados."]],a:0},
+  ];
+  const quizRoot=document.getElementById('quiz');
+  if(quizRoot){
+    let qi=0,score=0;
+    const qn=quizRoot.querySelector('#qn');
+    const prg=quizRoot.querySelector('#qprog');
+    const opts=quizRoot.querySelector('#qopts');
+    const fb=quizRoot.querySelector('#qfb');
+    function paint(){
+      const d=quizData[qi];
+      prg.textContent='Pergunta '+(qi+1)+' / '+quizData.length+'  ·  '+score+' certas';
+      qn.textContent=d.q;opts.innerHTML='';fb.textContent='';fb.style.color='';
+      d.opts.forEach((o,i)=>{
+        const b=document.createElement('button');b.className='qopt';
+        b.innerHTML='<span class="dot"><svg class="ic" style="font-size:.8em;opacity:0"><use href="#i-check"/></svg></span><span>'+o[0]+'</span>';
+        b.addEventListener('click',()=>{
+          if(opts.classList.contains('done'))return;
+          opts.classList.add('done');
+          const correct=i===d.a;
+          if(correct){b.classList.add('right');score++;}else{b.classList.add('wrong');opts.children[d.a].classList.add('right');}
+          b.querySelector('.ic').style.opacity='1';
+          fb.textContent=o[1];fb.style.color=correct?'var(--teal-d)':'var(--coral-d)';
+          setTimeout(()=>{
+            if(qi<quizData.length-1){qi++;opts.classList.remove('done');paint();}
+            else{
+              qn.textContent='Resultado: '+score+' em '+quizData.length;
+              prg.textContent='Quiz concluído';
+              opts.innerHTML='';
+              fb.textContent=score>=4?'Excelente — pronto para fazer a diferença na urgência.':'Bom começo. Reveja os pontos-chave e tente outra vez.';
+              fb.style.color='var(--teal-d)';
+            }
+          },2100);
+        });
+        opts.appendChild(b);
+      });
+    }
+    paint();
+  }
+
+  render();
+})();
+</script>
+<script>
+const HOSPITAL_LOGO = "data:image/png;base64,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";
+(function(){
+  const img=document.getElementById('brandLogo');
+  const ph=document.querySelector('.logo-ph');
+  if(!img)return;
+  img.addEventListener('load',()=>{img.style.display='block';if(ph)ph.style.display='none';});
+  img.addEventListener('error',()=>{img.style.display='none';if(ph)ph.style.display='';});
+  img.src = HOSPITAL_LOGO || 'hospital-da-luz-lisboa.png';
+})();
+</script>
+</body>
+</html>

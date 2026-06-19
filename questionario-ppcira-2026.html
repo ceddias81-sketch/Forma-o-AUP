@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CIURA/PPCIRA 2026 — Inquérito Nacional de Caracterização</title>
+<style>
+:root{
+  --blue:#003366;
+  --blue-d:#001f42;
+  --blue-l:#1a5fa8;
+  --teal:#0e7d74;
+  --teal-l:#13a89c;
+  --teal-bg:#e8f5f4;
+  --gold:#c8952a;
+  --red:#c0392b;
+  --paper:#f7f8fa;
+  --paper-2:#ffffff;
+  --ink:#1a2331;
+  --ink-2:#364152;
+  --muted:#6b7a8d;
+  --line:#d0d8e4;
+  --line-2:#eaecf0;
+  --shadow:0 2px 12px rgba(0,30,80,.1);
+  --shadow-lg:0 8px 32px rgba(0,30,80,.15);
+  --r:10px;
+  --r-sm:6px;
+  --body:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);font-size:15px;line-height:1.6}
+
+/* ---- HEADER ---- */
+.site-header{
+  background:linear-gradient(135deg,var(--blue-d) 0%,var(--blue) 60%,var(--blue-l) 100%);
+  color:#fff;padding:0;position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 16px rgba(0,30,80,.35);
+}
+.header-inner{
+  max-width:1100px;margin:0 auto;padding:18px 24px;
+  display:flex;align-items:center;gap:20px;
+}
+.header-logo{
+  width:48px;height:48px;background:#fff;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.header-logo svg{width:28px;height:28px}
+.header-text h1{font-size:15px;font-weight:700;letter-spacing:.01em;line-height:1.3}
+.header-text p{font-size:12px;opacity:.8;margin-top:2px}
+.header-badges{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.badge{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  color:#fff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;
+  white-space:nowrap;
+}
+.badge--gold{background:var(--gold);border-color:var(--gold)}
+
+/* ---- PROGRESS BAR ---- */
+.progress-wrap{background:rgba(0,0,0,.2);height:4px}
+.progress-bar{height:4px;background:var(--teal-l);transition:width .4s ease;width:0%}
+
+/* ---- LAYOUT ---- */
+.layout{max-width:1100px;margin:0 auto;padding:32px 24px;display:grid;grid-template-columns:220px 1fr;gap:32px;align-items:start}
+@media(max-width:760px){.layout{grid-template-columns:1fr;padding:16px}}
+
+/* ---- SIDEBAR ---- */
+.sidebar{position:sticky;top:80px}
+.nav-card{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.nav-card-head{background:var(--blue);color:#fff;padding:12px 16px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.nav-list{list-style:none;padding:8px 0}
+.nav-list li a{
+  display:flex;align-items:center;gap:10px;padding:9px 16px;
+  text-decoration:none;color:var(--ink-2);font-size:13px;font-weight:500;
+  transition:background .15s,color .15s;border-left:3px solid transparent;
+}
+.nav-list li a:hover{background:var(--teal-bg);color:var(--teal)}
+.nav-list li a.active{background:var(--teal-bg);color:var(--teal);border-left-color:var(--teal);font-weight:700}
+.nav-num{
+  width:22px;height:22px;border-radius:50%;background:var(--line-2);
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;color:var(--muted);transition:background .15s,color .15s;
+}
+.nav-list li a.active .nav-num{background:var(--teal);color:#fff}
+.nav-list li a.done .nav-num{background:#22c55e;color:#fff}
+
+.deadline-card{margin-top:16px;background:var(--paper-2);border:1px solid var(--gold);border-radius:var(--r);padding:14px 16px}
+.deadline-card .icon{font-size:20px;margin-bottom:6px}
+.deadline-card p{font-size:12px;color:var(--ink-2);line-height:1.5}
+.deadline-card strong{color:var(--red)}
+
+/* ---- INTRO CARD ---- */
+.intro-card{
+  background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);
+  padding:28px 32px;margin-bottom:28px;box-shadow:var(--shadow);
+}
+.intro-card h2{font-size:20px;font-weight:800;color:var(--blue);margin-bottom:8px}
+.intro-card p{color:var(--ink-2);font-size:14px;margin-bottom:8px}
+.intro-list{margin:12px 0 0 20px;font-size:14px;color:var(--ink-2)}
+.intro-list li{margin-bottom:4px}
+.notice{
+  background:#fffbeb;border:1px solid #f5c518;border-radius:var(--r-sm);
+  padding:12px 16px;font-size:13px;color:#7a5c00;margin-top:16px;display:flex;gap:10px;align-items:flex-start;
+}
+.notice-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+/* ---- SECTIONS ---- */
+.form-section{
+  background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);
+  margin-bottom:28px;box-shadow:var(--shadow);overflow:hidden;
+}
+.section-head{
+  background:linear-gradient(90deg,var(--blue) 0%,var(--blue-l) 100%);
+  color:#fff;padding:16px 24px;display:flex;align-items:center;gap:14px;
+}
+.section-num{
+  width:36px;height:36px;background:rgba(255,255,255,.2);border-radius:50%;
+  font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.section-head h2{font-size:16px;font-weight:700;line-height:1.3}
+.section-head p{font-size:12px;opacity:.8;margin-top:2px}
+.section-body{padding:24px}
+
+/* ---- QUESTIONS ---- */
+.q-block{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--line-2)}
+.q-block:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.q-label{
+  display:block;font-weight:600;font-size:14px;color:var(--ink);margin-bottom:10px;line-height:1.5;
+}
+.q-label .q-num{color:var(--blue-l);font-weight:700;margin-right:4px}
+.q-label .req{color:var(--red);margin-left:2px}
+.q-hint{font-size:12px;color:var(--muted);margin-top:-6px;margin-bottom:10px;font-weight:400}
+
+/* inputs */
+input[type=text],input[type=number],input[type=email],select,textarea{
+  width:100%;border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:9px 12px;font-family:inherit;font-size:14px;color:var(--ink);
+  background:#fff;transition:border-color .15s,box-shadow .15s;
+  -webkit-appearance:none;
+}
+input[type=text]:focus,input[type=number]:focus,input[type=email]:focus,select:focus,textarea:focus{
+  border-color:var(--teal-l);outline:none;box-shadow:0 0 0 3px rgba(14,125,116,.12);
+}
+input[type=text].invalid,input[type=number].invalid,select.invalid,textarea.invalid{
+  border-color:var(--red);
+}
+textarea{min-height:90px;resize:vertical}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a8d' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;cursor:pointer}
+
+/* radios & checkboxes */
+.radio-group,.check-group{display:flex;flex-direction:column;gap:8px}
+.radio-group.horizontal,.check-group.horizontal{flex-direction:row;flex-wrap:wrap;gap:8px 16px}
+.radio-item,.check-item{
+  display:flex;align-items:center;gap:10px;cursor:pointer;
+  background:#f8f9fb;border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:9px 14px;font-size:14px;transition:background .15s,border-color .15s;
+  user-select:none;
+}
+.radio-item:hover,.check-item:hover{background:var(--teal-bg);border-color:var(--teal-l)}
+.radio-item input,.check-item input{
+  width:17px;height:17px;flex-shrink:0;accent-color:var(--teal);cursor:pointer;
+}
+.radio-item.selected,.check-item.selected{background:var(--teal-bg);border-color:var(--teal)}
+
+/* sub-questions */
+.sub-q{
+  margin-top:12px;margin-left:20px;padding:16px;
+  background:var(--paper);border-left:3px solid var(--teal-l);border-radius:0 var(--r-sm) var(--r-sm) 0;
+  display:none;
+}
+.sub-q.visible{display:block}
+.sub-q .q-label{font-size:13.5px}
+
+/* table questions */
+.table-q{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.table-q th{background:var(--blue);color:#fff;padding:8px 10px;text-align:left;font-weight:600;font-size:12px}
+.table-q td{padding:7px 10px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+.table-q tr:nth-child(even) td{background:#f9fafc}
+.table-q td input{width:80px;min-width:60px}
+.table-q td:first-child{font-weight:500;color:var(--ink-2)}
+@media(max-width:600px){.table-q{display:block;overflow-x:auto}}
+
+/* grid 2 col */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px}
+@media(max-width:560px){.grid-2{grid-template-columns:1fr}}
+
+/* ranking */
+.rank-list{list-style:none;counter-reset:rank}
+.rank-item{
+  display:flex;align-items:center;gap:12px;padding:10px 14px;
+  background:#f8f9fb;border:1px solid var(--line);border-radius:var(--r-sm);
+  margin-bottom:6px;cursor:grab;user-select:none;font-size:14px;
+  transition:background .15s;
+}
+.rank-item:active{cursor:grabbing;background:var(--teal-bg)}
+.rank-item .rank-handle{color:var(--muted);font-size:18px;cursor:grab}
+.rank-item .rank-pos{
+  width:28px;height:28px;background:var(--blue);color:#fff;
+  border-radius:50%;font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.rank-help{font-size:12px;color:var(--muted);margin-bottom:10px}
+
+/* ---- ACTIONS ---- */
+.form-actions{
+  background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);
+  padding:24px 32px;box-shadow:var(--shadow);display:flex;gap:12px;flex-wrap:wrap;align-items:center;
+}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:11px 22px;
+  border-radius:var(--r-sm);font-family:inherit;font-size:14px;font-weight:600;
+  cursor:pointer;border:none;transition:all .15s;text-decoration:none;
+}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{background:var(--teal-l);box-shadow:var(--shadow)}
+.btn-secondary{background:var(--paper);color:var(--ink-2);border:1px solid var(--line)}
+.btn-secondary:hover{background:var(--line-2)}
+.btn-outline{background:transparent;color:var(--blue);border:1px solid var(--blue)}
+.btn-outline:hover{background:var(--blue);color:#fff}
+.btn svg{width:16px;height:16px;flex-shrink:0}
+.validation-msg{font-size:13px;color:var(--red);padding:8px 12px;background:#fff5f5;border-radius:var(--r-sm);border:1px solid #fcc;display:none}
+.validation-msg.visible{display:block}
+
+/* ---- SUCCESS ---- */
+#success-panel{
+  display:none;background:var(--paper-2);border:1px solid #22c55e;border-radius:var(--r);
+  padding:40px;text-align:center;box-shadow:var(--shadow-lg);
+}
+#success-panel.visible{display:block}
+#success-panel .check{font-size:64px;margin-bottom:16px}
+#success-panel h2{font-size:22px;font-weight:800;color:var(--blue);margin-bottom:10px}
+#success-panel p{color:var(--ink-2);font-size:14px;margin-bottom:8px}
+
+/* ---- FOOTER ---- */
+footer{background:var(--blue-d);color:rgba(255,255,255,.6);text-align:center;padding:20px 24px;font-size:12px;margin-top:40px}
+footer strong{color:rgba(255,255,255,.9)}
+
+/* ---- PRINT ---- */
+@media print{
+  .site-header,.sidebar,.form-actions,footer{display:none!important}
+  .layout{display:block;padding:0}
+  .form-section{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid}
+  .sub-q{display:block!important}
+}
+
+/* ---- SCROLL INDICATOR ---- */
+.scroll-top{
+  position:fixed;bottom:24px;right:24px;width:44px;height:44px;
+  background:var(--blue);color:#fff;border-radius:50%;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-lg);
+  opacity:0;transition:opacity .2s;z-index:50;
+}
+.scroll-top.visible{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="13" fill="#003366"/>
+        <path d="M14 6v16M6 14h16" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="14" cy="14" r="3" fill="#0e7d74"/>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h1>Inquérito Nacional de Caracterização dos S/UL-PPCIRA</h1>
+      <p>CIURA/PPCIRA 2026 · Direção-Geral da Saúde · Ordem dos Médicos</p>
+    </div>
+    <div class="header-badges">
+      <span class="badge">Confidencial</span>
+      <span class="badge badge--gold">Prazo: 30 Jun 2026</span>
+    </div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+</header>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <nav class="nav-card" aria-label="Secções do questionário">
+      <div class="nav-card-head">Navegação</div>
+      <ul class="nav-list" id="sideNav">
+        <li><a href="#sec1" class="active"><span class="nav-num">I</span>Caracterização Institucional</a></li>
+        <li><a href="#sec2"><span class="nav-num">II</span>Recursos Humanos</a></li>
+        <li><a href="#sec3"><span class="nav-num">III</span>Vigilância Epidemiológica</a></li>
+        <li><a href="#sec4"><span class="nav-num">IV</span>Formação e Competências</a></li>
+        <li><a href="#sec5"><span class="nav-num">V</span>Infraestruturas</a></li>
+        <li><a href="#sec6"><span class="nav-num">VI</span>Perceção Prática</a></li>
+      </ul>
+    </nav>
+    <div class="deadline-card">
+      <div class="icon">📅</div>
+      <p><strong>Data limite de resposta:</strong><br><strong>30 de junho de 2026</strong></p>
+      <p style="margin-top:6px">Uma resposta por instituição. Respostas confidenciais, analisadas em agregado.</p>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main>
+
+    <!-- INTRO -->
+    <div class="intro-card">
+      <h2>Inquérito Nacional de Caracterização dos Serviços/Unidades Locais PPCIRA (CIURA/PPCIRA 2026)</h2>
+      <p>Este inquérito é promovido pelo <strong>PPCIRA — Programa de Prevenção e Controlo de Infeções e de Resistência aos Antimicrobianos</strong> da Direção-Geral da Saúde, em colaboração com o <strong>CIURA — Colégio da Competência em Controlo de Infeção e Uso Racional de Antibióticos</strong> da Ordem dos Médicos.</p>
+      <p style="margin-top:8px">Destina-se aos <strong>Diretores/Coordenadores das estruturas locais S/UL-PPCIRA</strong>. Deve ser submetida <strong>uma única resposta por instituição</strong>.</p>
+      <ul class="intro-list">
+        <li>Tempo estimado de preenchimento: <strong>~30 minutos</strong></li>
+        <li>Todos os dados são <strong>confidenciais</strong> e tratados de forma agregada</li>
+        <li>Campos assinalados com <span style="color:var(--red);font-weight:700">*</span> são de resposta obrigatória</li>
+      </ul>
+      <div class="notice">
+        <span class="notice-icon">ℹ️</span>
+        <span>Poderá exportar as suas respostas em <strong>ficheiro Excel (CSV)</strong> ou JSON a qualquer momento através dos botões de exportação. O ficheiro CSV abre diretamente no Microsoft Excel e Google Sheets com todos os caracteres portugueses. Os dados são guardados localmente no seu dispositivo — o questionário não envia informação para servidores externos até submissão.</span>
+      </div>
+    </div>
+
+    <form id="mainForm" novalidate>
+
+    <!-- ===== SECTION I ===== -->
+    <section class="form-section" id="sec1">
+      <div class="section-head">
+        <div class="section-num">I</div>
+        <div>
+          <h2>Caracterização e Enquadramento Institucional</h2>
+          <p>Identificação e estrutura da instituição</p>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="q-block">
+          <label class="q-label" for="q1"><span class="q-num">1.</span>Nome da instituição<span class="req">*</span></label>
+          <input type="text" id="q1" name="q1" placeholder="Designação completa da instituição" required>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">2.</span>Setor da instituição<span class="req">*</span></legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q2" value="publica" required> Pública</label>
+              <label class="radio-item"><input type="radio" name="q2" value="privada"> Privada</label>
+              <label class="radio-item"><input type="radio" name="q2" value="social"> Social</label>
+              <label class="radio-item"><input type="radio" name="q2" value="outra_setor"> Outra</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">3.</span>Tipologia de cuidados<span class="req">*</span></legend>
+            <div class="check-group horizontal">
+              <label class="check-item"><input type="checkbox" name="q3" value="hospital"> Hospital</label>
+              <label class="check-item"><input type="checkbox" name="q3" value="csp"> Cuidados de Saúde Primários (CSP)</label>
+              <label class="check-item"><input type="checkbox" name="q3" value="continuados"> Continuados</label>
+              <label class="check-item"><input type="checkbox" name="q3" value="paliativos"> Paliativos</label>
+              <label class="check-item"><input type="checkbox" name="q3" value="outra_tipologia"> Outra</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="q-block">
+          <label class="q-label" for="q4"><span class="q-num">4.</span>Região de Saúde<span class="req">*</span></label>
+          <select id="q4" name="q4" required>
+            <option value="">— Selecione —</option>
+            <option value="norte">Norte</option>
+            <option value="centro">Centro</option>
+            <option value="lvt">Lisboa e Vale do Tejo (LVT)</option>
+            <option value="alentejo">Alentejo</option>
+            <option value="algarve">Algarve</option>
+            <option value="ram">Região Autónoma da Madeira (RAM)</option>
+            <option value="raa">Região Autónoma dos Açores (RAA)</option>
+          </select>
+        </div>
+
+        <div class="q-block">
+          <label class="q-label"><span class="q-num">5.</span>Dimensão assistencial (referente a 2025)</label>
+          <div class="q-hint">Preencha os campos aplicáveis à sua instituição</div>
+          <div class="grid-2">
+            <div>
+              <label class="q-label" for="q5a" style="font-size:13px;font-weight:500">N.º camas de internamento agudo</label>
+              <input type="number" id="q5a" name="q5_camas_agudo" min="0" placeholder="Nº">
+            </div>
+            <div>
+              <label class="q-label" for="q5b" style="font-size:13px;font-weight:500">N.º camas de UCI</label>
+              <input type="number" id="q5b" name="q5_camas_uci" min="0" placeholder="Nº">
+            </div>
+            <div>
+              <label class="q-label" for="q5c" style="font-size:13px;font-weight:500">N.º camas de continuados</label>
+              <input type="number" id="q5c" name="q5_camas_continuados" min="0" placeholder="Nº">
+            </div>
+            <div>
+              <label class="q-label" for="q5d" style="font-size:13px;font-weight:500">Taxa de ocupação 2025 (%)</label>
+              <input type="number" id="q5d" name="q5_taxa_ocupacao" min="0" max="100" placeholder="%">
+            </div>
+            <div>
+              <label class="q-label" for="q5e" style="font-size:13px;font-weight:500">População inscrita CSP (ULS) — n.º utentes</label>
+              <input type="number" id="q5e" name="q5_pop_csp" min="0" placeholder="N.º utentes">
+            </div>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">6.</span>O S/UL-PPCIRA está formalmente nomeado pelo órgão máximo de gestão?<span class="req">*</span></legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q6" value="sim" required> Sim</label>
+              <label class="radio-item"><input type="radio" name="q6" value="nao"> Não</label>
+            </div>
+          </fieldset>
+          <div class="sub-q" id="sub_q6">
+            <label class="q-label"><span class="q-num">6.1</span>Tipo de estrutura formal</label>
+            <div class="radio-group">
+              <label class="radio-item"><input type="radio" name="q6_1" value="servico_autonomo"> Serviço autónomo</label>
+              <label class="radio-item"><input type="radio" name="q6_1" value="unidade_func_autonoma"> Unidade Funcional Autónoma</label>
+              <label class="radio-item"><input type="radio" name="q6_1" value="unidade_func_integrada"> Unidade Funcional Integrada</label>
+              <label class="radio-item"><input type="radio" name="q6_1" value="apoio_tecnico"> Estrutura de Apoio Técnico</label>
+              <label class="radio-item"><input type="radio" name="q6_1" value="comissao"> Comissão</label>
+              <label class="radio-item"><input type="radio" name="q6_1" value="outro_estrutura"> Outro</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">7.</span>O S/UL-PPCIRA possui Regulamento aprovado?<span class="req">*</span></legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q7" value="sim" required> Sim</label>
+              <label class="radio-item"><input type="radio" name="q7" value="elaboracao"> Em elaboração</label>
+              <label class="radio-item"><input type="radio" name="q7" value="nao"> Não</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="q-block">
+          <label class="q-label" for="q8"><span class="q-num">8.</span>O S/UL-PPCIRA reporta diretamente a:<span class="req">*</span></label>
+          <select id="q8" name="q8" required>
+            <option value="">— Selecione —</option>
+            <option value="conselho_admin">Conselho de Administração</option>
+            <option value="dir_clinica">Direção Clínica</option>
+            <option value="dir_clin_enf">Direção Clínica + Enfermagem</option>
+            <option value="dir_enfermagem">Direção de Enfermagem</option>
+            <option value="departamento">Departamento</option>
+            <option value="outro_reporte">Outro</option>
+          </select>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">9.</span>É contratualizado anualmente um Plano de Atividades do S/UL-PPCIRA?<span class="req">*</span></legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q9" value="sim" required> Sim</label>
+              <label class="radio-item"><input type="radio" name="q9" value="nao"> Não</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">10.</span>Existe relatório anual de atividades do S/UL-PPCIRA?<span class="req">*</span></legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q10" value="sim" required> Sim</label>
+              <label class="radio-item"><input type="radio" name="q10" value="nao"> Não</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">11.</span>Os objetivos estratégicos institucionais contemplam indicadores PCIRA?<span class="req">*</span></legend>
+            <div class="radio-group">
+              <label class="radio-item"><input type="radio" name="q11" value="sim" required> Sim</label>
+              <label class="radio-item"><input type="radio" name="q11" value="nao"> Não</label>
+            </div>
+          </fieldset>
+          <div class="sub-q" id="sub_q11">
+            <label class="q-label" for="q11_1"><span class="q-num">11.1</span>Especifique os indicadores contemplados</label>
+            <textarea id="q11_1" name="q11_indicadores" placeholder="Descreva os indicadores PCIRA contemplados nos objetivos estratégicos…"></textarea>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">12.</span>O S/UL-PPCIRA é centro de custos autónomo?<span class="req">*</span></legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q12" value="sim" required> Sim</label>
+              <label class="radio-item"><input type="radio" name="q12" value="nao"> Não</label>
+            </div>
+          </fieldset>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== SECTION II ===== -->
+    <section class="form-section" id="sec2">
+      <div class="section-head">
+        <div class="section-num">II</div>
+        <div>
+          <h2>Recursos Humanos e Estrutura de Funcionamento</h2>
+          <p>Composição da equipa, nomeação e organização interna</p>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="q-block">
+          <label class="q-label"><span class="q-num">13.</span>Composição da equipa do S/UL-PPCIRA</label>
+          <div class="q-hint">Preencha os dados aplicáveis a cada categoria profissional</div>
+          <div style="overflow-x:auto">
+          <table class="table-q">
+            <thead>
+              <tr>
+                <th>Categoria</th>
+                <th>N.º elementos</th>
+                <th>Especialidade / Área</th>
+                <th>H. semanais contratualizadas</th>
+                <th>H. semanais efetivas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Diretor(a)</td>
+                <td><input type="number" name="t13_dir_n" min="0" placeholder="0"></td>
+                <td><input type="text" name="t13_dir_esp" placeholder="Especialidade"></td>
+                <td><input type="number" name="t13_dir_hc" min="0" placeholder="h"></td>
+                <td><input type="number" name="t13_dir_he" min="0" placeholder="h"></td>
+              </tr>
+              <tr>
+                <td>Coordenador(a)</td>
+                <td><input type="number" name="t13_coord_n" min="0" placeholder="0"></td>
+                <td><input type="text" name="t13_coord_esp" placeholder="Especialidade"></td>
+                <td><input type="number" name="t13_coord_hc" min="0" placeholder="h"></td>
+                <td><input type="number" name="t13_coord_he" min="0" placeholder="h"></td>
+              </tr>
+              <tr>
+                <td>Enfermeiro(a) Gestor(a)</td>
+                <td><input type="number" name="t13_enfg_n" min="0" placeholder="0"></td>
+                <td><input type="text" name="t13_enfg_esp" placeholder="Especialidade"></td>
+                <td><input type="number" name="t13_enfg_hc" min="0" placeholder="h"></td>
+                <td><input type="number" name="t13_enfg_he" min="0" placeholder="h"></td>
+              </tr>
+              <tr>
+                <td>Médico(s)</td>
+                <td><input type="number" name="t13_med_n" min="0" placeholder="0"></td>
+                <td><input type="text" name="t13_med_esp" placeholder="Especialidade(s)"></td>
+                <td><input type="number" name="t13_med_hc" min="0" placeholder="h"></td>
+                <td><input type="number" name="t13_med_he" min="0" placeholder="h"></td>
+              </tr>
+              <tr>
+                <td>Enfermeiro(s)</td>
+                <td><input type="number" name="t13_enf_n" min="0" placeholder="0"></td>
+                <td><input type="text" name="t13_enf_esp" placeholder="Especialidade(s)"></td>
+                <td><input type="number" name="t13_enf_hc" min="0" placeholder="h"></td>
+                <td><input type="number" name="t13_enf_he" min="0" placeholder="h"></td>
+              </tr>
+              <tr>
+                <td>Farmacêutico(s)</td>
+                <td><input type="number" name="t13_farm_n" min="0" placeholder="0"></td>
+                <td><input type="text" name="t13_farm_esp" placeholder="Área/Serviço"></td>
+                <td><input type="number" name="t13_farm_hc" min="0" placeholder="h"></td>
+                <td><input type="number" name="t13_farm_he" min="0" placeholder="h"></td>
+              </tr>
+              <tr>
+                <td>Outro(s)</td>
+                <td><input type="number" name="t13_out_n" min="0" placeholder="0"></td>
+                <td><input type="text" name="t13_out_esp" placeholder="Categoria/Área"></td>
+                <td><input type="number" name="t13_out_hc" min="0" placeholder="h"></td>
+                <td><input type="number" name="t13_out_he" min="0" placeholder="h"></td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <div class="sub-q visible" style="margin-top:16px">
+            <div class="q-block" style="margin-bottom:16px;padding-bottom:16px">
+              <fieldset>
+                <legend class="q-label"><span class="q-num">13.1</span>Tem Diretor ou Coordenador formalmente nomeado?</legend>
+                <div class="radio-group horizontal">
+                  <label class="radio-item"><input type="radio" name="q13_1" value="sim"> Sim</label>
+                  <label class="radio-item"><input type="radio" name="q13_1" value="nao"> Não</label>
+                </div>
+              </fieldset>
+            </div>
+            <div class="q-block" style="margin-bottom:16px;padding-bottom:16px">
+              <fieldset>
+                <legend class="q-label"><span class="q-num">13.2</span>A nomeação formal abrange todos os elementos da equipa?</legend>
+                <div class="radio-group horizontal">
+                  <label class="radio-item"><input type="radio" name="q13_2" value="sim_todos"> Sim, todos</label>
+                  <label class="radio-item"><input type="radio" name="q13_2" value="parcialmente"> Parcialmente</label>
+                  <label class="radio-item"><input type="radio" name="q13_2" value="nao"> Não</label>
+                </div>
+              </fieldset>
+            </div>
+            <div class="q-block" style="margin-bottom:0;padding-bottom:0">
+              <fieldset>
+                <legend class="q-label"><span class="q-num">13.3</span>Cumpre os requisitos mínimos do Despacho n.º 10901/2022?</legend>
+                <div class="radio-group horizontal">
+                  <label class="radio-item"><input type="radio" name="q13_3" value="sim"> Sim</label>
+                  <label class="radio-item"><input type="radio" name="q13_3" value="nao"> Não</label>
+                </div>
+              </fieldset>
+              <div class="sub-q" id="sub_q13_3">
+                <label class="q-label"><span class="q-num">13.3.1</span>Identifique o(s) défice(s) existente(s)</label>
+                <div class="check-group">
+                  <label class="check-item"><input type="checkbox" name="q13_3_1" value="deficit_medico"> Défice de tempo médico</label>
+                  <label class="check-item"><input type="checkbox" name="q13_3_1" value="deficit_enfermagem"> Défice de tempo de enfermagem</label>
+                  <label class="check-item"><input type="checkbox" name="q13_3_1" value="ausencia_microbiologia"> Ausência de microbiologista</label>
+                  <label class="check-item"><input type="checkbox" name="q13_3_1" value="ausencia_farmaceutico"> Ausência de farmacêutico</label>
+                  <label class="check-item"><input type="checkbox" name="q13_3_1" value="ausencia_horario_dir"> Ausência de horário completo do Diretor</label>
+                  <label class="check-item"><input type="checkbox" name="q13_3_1" value="ausencia_qualidade"> Ausência de competências em qualidade</label>
+                  <label class="check-item"><input type="checkbox" name="q13_3_1" value="outro_deficit"> Outro</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">14.</span>Existem elementos dinamizadores/elos PCIRA nos serviços formalmente designados?<span class="req">*</span></legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q14" value="sim" required> Sim</label>
+              <label class="radio-item"><input type="radio" name="q14" value="nao"> Não</label>
+            </div>
+          </fieldset>
+          <div class="sub-q" id="sub_q14">
+            <label class="q-label" for="q14_1"><span class="q-num">14.1</span>Percentagem de serviços com elos PCIRA designados</label>
+            <select id="q14_1" name="q14_pct">
+              <option value="">— Selecione —</option>
+              <option value="0_25">0–25%</option>
+              <option value="26_50">26–50%</option>
+              <option value="51_75">51–75%</option>
+              <option value="76_100">76–100%</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <label class="q-label"><span class="q-num">15.</span>Distribuição percentual das horas semanais entre PCI e PAPA</label>
+          <div class="q-hint">Indique a percentagem de horas dedicadas a PCI vs. PAPA por categoria profissional</div>
+          <table class="table-q">
+            <thead>
+              <tr><th>Categoria</th><th>% horas PCI</th><th>% horas PAPA</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Médicos</td>
+                <td><input type="number" name="q15_med_pci" min="0" max="100" placeholder="%"></td>
+                <td><input type="number" name="q15_med_papa" min="0" max="100" placeholder="%"></td>
+              </tr>
+              <tr>
+                <td>Enfermeiros</td>
+                <td><input type="number" name="q15_enf_pci" min="0" max="100" placeholder="%"></td>
+                <td><input type="number" name="q15_enf_papa" min="0" max="100" placeholder="%"></td>
+              </tr>
+              <tr>
+                <td>Outros</td>
+                <td><input type="number" name="q15_out_pci" min="0" max="100" placeholder="%"></td>
+                <td><input type="number" name="q15_out_papa" min="0" max="100" placeholder="%"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="q-block">
+          <label class="q-label" for="q16"><span class="q-num">16.</span>Periodicidade de reunião da equipa nuclear do S/UL-PPCIRA</label>
+          <select id="q16" name="q16">
+            <option value="">— Selecione —</option>
+            <option value="semanal">Semanal</option>
+            <option value="quinzenal">Quinzenal</option>
+            <option value="mensal">Mensal</option>
+            <option value="trimestral">Trimestral</option>
+            <option value="sem_periodicidade">Sem periodicidade definida</option>
+            <option value="outra">Outra</option>
+          </select>
+        </div>
+
+        <div class="q-block">
+          <label class="q-label" for="q17"><span class="q-num">17.</span>Periodicidade de reunião com o órgão máximo de gestão</label>
+          <select id="q17" name="q17">
+            <option value="">— Selecione —</option>
+            <option value="mensal">Mensal</option>
+            <option value="trimestral">Trimestral</option>
+            <option value="semestral">Semestral</option>
+            <option value="anual">Anual</option>
+            <option value="so_quando_solicitado">Só quando solicitado</option>
+            <option value="outra">Outra</option>
+          </select>
+        </div>
+
+        <div class="q-block">
+          <label class="q-label" for="q18"><span class="q-num">18.</span>Periodicidade de reunião com os principais serviços clínicos</label>
+          <select id="q18" name="q18">
+            <option value="">— Selecione —</option>
+            <option value="mensal">Mensal</option>
+            <option value="trimestral">Trimestral</option>
+            <option value="semestral">Semestral</option>
+            <option value="anual">Anual</option>
+            <option value="so_quando_solicitado">Só quando solicitado</option>
+            <option value="outra">Outra</option>
+          </select>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">19.</span>É realizada a contratualização de objetivos PPCIRA com os serviços clínicos?</legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q19" value="sim_todos"> Sim, em todos os serviços</label>
+              <label class="radio-item"><input type="radio" name="q19" value="sim_alguns"> Sim, em alguns serviços</label>
+              <label class="radio-item"><input type="radio" name="q19" value="nao"> Não</label>
+            </div>
+          </fieldset>
+          <div class="sub-q" id="sub_q19">
+            <label class="q-label" for="q19_1"><span class="q-num">19.1</span>Percentagem de serviços com contratualização de objetivos PPCIRA</label>
+            <select id="q19_1" name="q19_pct">
+              <option value="">— Selecione —</option>
+              <option value="0_25">0–25%</option>
+              <option value="26_50">26–50%</option>
+              <option value="51_75">51–75%</option>
+              <option value="76_100">76–100%</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== SECTION III ===== -->
+    <section class="form-section" id="sec3">
+      <div class="section-head">
+        <div class="section-num">III</div>
+        <div>
+          <h2>Atividades de Vigilância Epidemiológica</h2>
+          <p>Programas de VE, PAPA e participação em projetos nacionais/internacionais</p>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">20.</span>Existem programas estruturados de vigilância epidemiológica nas diferentes dimensões PCIRA?<span class="req">*</span></legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q20" value="sim_todos" required> Sim, em todas as dimensões</label>
+              <label class="radio-item"><input type="radio" name="q20" value="parcialmente"> Parcialmente</label>
+              <label class="radio-item"><input type="radio" name="q20" value="nao"> Não</label>
+            </div>
+          </fieldset>
+          <div class="sub-q" id="sub_q20">
+            <div class="q-block" style="margin-bottom:16px;padding-bottom:16px">
+              <label class="q-label"><span class="q-num">20.1</span>Dimensões abrangidas pelos programas de VE (selecione todas as aplicáveis)</label>
+              <div class="check-group">
+                <label class="check-item"><input type="checkbox" name="q20_1" value="pbci"> Precauções Básicas Controlo Infeção (PBCI)</label>
+                <label class="check-item"><input type="checkbox" name="q20_1" value="luvas"> Uso de luvas</label>
+                <label class="check-item"><input type="checkbox" name="q20_1" value="higiene_maos"> Higiene das mãos</label>
+                <label class="check-item"><input type="checkbox" name="q20_1" value="ilc"> Infeção de Local Cirúrgico (ILC)</label>
+                <label class="check-item"><input type="checkbox" name="q20_1" value="ilc_cirurgica"> ILC — cirurgia específica (ECDC)</label>
+                <label class="check-item"><input type="checkbox" name="q20_1" value="icsrcvc"> Infeção da corrente sanguínea relacionada com CVC (ICSRCVC)</label>
+                <label class="check-item"><input type="checkbox" name="q20_1" value="bacteriemias"> Bacteriémias</label>
+                <label class="check-item"><input type="checkbox" name="q20_1" value="pai"> Pneumonia associada a intubação (PAI)</label>
+                <label class="check-item"><input type="checkbox" name="q20_1" value="ituacv"> Infeção do trato urinário associada a cateter vesical (ITUACV)</label>
+                <label class="check-item"><input type="checkbox" name="q20_1" value="mmr"> Microrganismos multirresistentes (MMR)</label>
+                <label class="check-item"><input type="checkbox" name="q20_1" value="c_difficile"> Clostridioides difficile</label>
+                <label class="check-item"><input type="checkbox" name="q20_1" value="consumo_atm"> Consumo de antimicrobianos</label>
+                <label class="check-item"><input type="checkbox" name="q20_1" value="qualidade_papa"> Qualidade da prescrição (PAPA)</label>
+                <label class="check-item"><input type="checkbox" name="q20_1" value="outros_ve"> Outros</label>
+              </div>
+            </div>
+            <div class="q-block" style="margin-bottom:16px;padding-bottom:16px">
+              <label class="q-label" for="q20_2"><span class="q-num">20.2</span>Percentagem de serviços abrangidos pela VE</label>
+              <select id="q20_2" name="q20_2_pct">
+                <option value="">— Selecione —</option>
+                <option value="0_25">0–25%</option>
+                <option value="26_50">26–50%</option>
+                <option value="51_75">51–75%</option>
+                <option value="76_100">76–100%</option>
+              </select>
+            </div>
+            <div class="q-block" style="margin-bottom:16px;padding-bottom:16px">
+              <fieldset>
+                <legend class="q-label"><span class="q-num">20.3</span>Sistema de informação utilizado</legend>
+                <div class="check-group horizontal">
+                  <label class="check-item"><input type="checkbox" name="q20_3" value="plataforma_dgs"> Plataforma DGS</label>
+                  <label class="check-item"><input type="checkbox" name="q20_3" value="hepic"> Hepic®</label>
+                  <label class="check-item"><input type="checkbox" name="q20_3" value="meliora"> Meliora®</label>
+                  <label class="check-item"><input type="checkbox" name="q20_3" value="outro_si"> Outro</label>
+                </div>
+              </fieldset>
+            </div>
+            <div class="q-block" style="margin-bottom:0;padding-bottom:0">
+              <fieldset>
+                <legend class="q-label"><span class="q-num">20.4</span>Existe feedback estruturado e regular dos dados de VE para os serviços?</legend>
+                <div class="radio-group horizontal">
+                  <label class="radio-item"><input type="radio" name="q20_4" value="sim"> Sim</label>
+                  <label class="radio-item"><input type="radio" name="q20_4" value="nao"> Não</label>
+                </div>
+              </fieldset>
+              <div class="sub-q" id="sub_q20_4">
+                <label class="q-label" for="q20_4_1"><span class="q-num">20.4.1</span>Frequência e método do feedback</label>
+                <textarea id="q20_4_1" name="q20_4_freq_metodo" placeholder="Descreva a frequência e o método utilizado (ex: relatório trimestral, reunião de serviço, dashboard, etc.)…"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">21.</span>O Programa de Apoio à Prescrição de Antibióticos (PAPA) está em funcionamento?<span class="req">*</span></legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q21" value="sim_todos" required> Sim, em todos os serviços</label>
+              <label class="radio-item"><input type="radio" name="q21" value="parcialmente"> Parcialmente</label>
+              <label class="radio-item"><input type="radio" name="q21" value="nao"> Não</label>
+            </div>
+          </fieldset>
+          <div class="sub-q" id="sub_q21">
+            <div class="q-block" style="margin-bottom:16px;padding-bottom:16px">
+              <fieldset>
+                <legend class="q-label"><span class="q-num">21.1</span>Em que valências/contextos está implementado o PAPA?</legend>
+                <div class="check-group">
+                  <label class="check-item"><input type="checkbox" name="q21_1" value="csp"> Cuidados de saúde primários (CSP)</label>
+                  <label class="check-item"><input type="checkbox" name="q21_1" value="internamento"> Internamento hospitalar</label>
+                  <label class="check-item"><input type="checkbox" name="q21_1" value="ambulatorio"> Ambulatório / Hospital de dia / Consultas</label>
+                  <label class="check-item"><input type="checkbox" name="q21_1" value="ucci"> Unidades de cuidados continuados (UCCI)</label>
+                  <label class="check-item"><input type="checkbox" name="q21_1" value="smi"> Serviço de Medicina Intensiva (SMI)</label>
+                  <label class="check-item"><input type="checkbox" name="q21_1" value="urgencia"> Urgência</label>
+                </div>
+              </fieldset>
+            </div>
+            <div class="q-block" style="margin-bottom:0;padding-bottom:0">
+              <fieldset>
+                <legend class="q-label"><span class="q-num">21.2</span>Componentes do PAPA implementadas (selecione todas as aplicáveis)</legend>
+                <div class="check-group">
+                  <label class="check-item"><input type="checkbox" name="q21_2" value="revisao_72h"> Revisão/restrição de prescrições até 72 horas</label>
+                  <label class="check-item"><input type="checkbox" name="q21_2" value="protocolos"> Protocolos institucionais de utilização de antibióticos</label>
+                  <label class="check-item"><input type="checkbox" name="q21_2" value="formacao"> Formação contínua de profissionais sobre antibióticos</label>
+                  <label class="check-item"><input type="checkbox" name="q21_2" value="feedback_metrics"> Retorno de métricas por unidade/serviço/prescritor</label>
+                  <label class="check-item"><input type="checkbox" name="q21_2" value="comportamental"> Projetos de intervenção comportamental (nudge, etc.)</label>
+                  <label class="check-item"><input type="checkbox" name="q21_2" value="outros_papa"> Outros</label>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <label class="q-label" for="q22"><span class="q-num">22.</span>Com que frequência é realizado o feedback dos dados PAPA aos prescritores?</label>
+          <select id="q22" name="q22">
+            <option value="">— Selecione —</option>
+            <option value="mensal">Mensal</option>
+            <option value="trimestral">Trimestral</option>
+            <option value="semestral">Semestral</option>
+            <option value="anual">Anual</option>
+            <option value="nao_realizado">Não é realizado</option>
+          </select>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">23.</span>Existe plano institucional de avaliação e resposta a surtos?<span class="req">*</span></legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q23" value="sim" required> Sim</label>
+              <label class="radio-item"><input type="radio" name="q23" value="nao"> Não</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">24.</span>Participa ativamente em algum projeto de melhoria da qualidade a nível nacional (ex: STOP-Infeção, Drive AMS, ITUCCI)?<span class="req">*</span></legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q24" value="sim" required> Sim</label>
+              <label class="radio-item"><input type="radio" name="q24" value="nao"> Não</label>
+            </div>
+          </fieldset>
+          <div class="sub-q" id="sub_q24">
+            <label class="q-label" for="q24_1"><span class="q-num">24.1</span>Identifique os projetos em que participa</label>
+            <textarea id="q24_1" name="q24_projetos" placeholder="Liste os projetos nacionais de melhoria da qualidade em que participa…"></textarea>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">25.</span>Participa ativamente em outros grupos de trabalho ou projetos nacionais/internacionais de PCIRA?</legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q25" value="sim"> Sim</label>
+              <label class="radio-item"><input type="radio" name="q25" value="nao"> Não</label>
+            </div>
+          </fieldset>
+          <div class="sub-q" id="sub_q25">
+            <label class="q-label" for="q25_1"><span class="q-num">25.1</span>Identifique os grupos de trabalho/projetos</label>
+            <textarea id="q25_1" name="q25_grupos" placeholder="Liste os grupos de trabalho ou projetos nacionais/internacionais…"></textarea>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== SECTION IV ===== -->
+    <section class="form-section" id="sec4">
+      <div class="section-head">
+        <div class="section-num">IV</div>
+        <div>
+          <h2>Formação, Competências e Desenvolvimento Profissional</h2>
+          <p>Capacitação da equipa e certificações profissionais</p>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">26.</span>Existem programas formais de capacitação e treino em PCIRA (acolhimento + formação contínua)?<span class="req">*</span></legend>
+            <div class="radio-group">
+              <label class="radio-item"><input type="radio" name="q26" value="sim_obrigatorio" required> Sim, com carácter obrigatório</label>
+              <label class="radio-item"><input type="radio" name="q26" value="sim_opcional"> Sim, com carácter opcional</label>
+              <label class="radio-item"><input type="radio" name="q26" value="nao"> Não</label>
+            </div>
+          </fieldset>
+          <div class="sub-q" id="sub_q26">
+            <label class="q-label" for="q26_1"><span class="q-num">26.1</span>Periodicidade da formação PCIRA para os profissionais da instituição</label>
+            <select id="q26_1" name="q26_periodicidade">
+              <option value="">— Selecione —</option>
+              <option value="anual">Anual</option>
+              <option value="2_anos">De 2 em 2 anos</option>
+              <option value="3_anos">De 3 em 3 anos</option>
+              <option value="sem_periodicidade">Sem periodicidade definida</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">27.</span>A formação contínua e progressiva da equipa S/UL-PPCIRA está assegurada?</legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q27" value="sim"> Sim</label>
+              <label class="radio-item"><input type="radio" name="q27" value="nao"> Não</label>
+            </div>
+          </fieldset>
+          <div class="sub-q" id="sub_q27">
+            <label class="q-label" for="q27_1"><span class="q-num">27.1</span>Como é assegurada a formação contínua da equipa?</label>
+            <textarea id="q27_1" name="q27_como" placeholder="Descreva as modalidades e recursos utilizados (ex: congressos, plataformas e-learning, formação interna, bolsas de formação, etc.)…"></textarea>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <label class="q-label"><span class="q-num">28.</span>Número de profissionais da equipa S/UL-PPCIRA com formação diferenciada em PPCIRA</label>
+          <div class="q-hint">Preencha o número de profissionais por nível de formação e categoria</div>
+          <div style="overflow-x:auto">
+          <table class="table-q">
+            <thead>
+              <tr>
+                <th>Nível de formação</th>
+                <th>Médicos (n.º)</th>
+                <th>Enfermeiros (n.º)</th>
+                <th>Outros (n.º)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Doutoramento em PCIRA</td><td><input type="number" name="t28_dout_med" min="0" placeholder="0"></td><td><input type="number" name="t28_dout_enf" min="0" placeholder="0"></td><td><input type="number" name="t28_dout_out" min="0" placeholder="0"></td></tr>
+              <tr><td>Mestrado em PCIRA</td><td><input type="number" name="t28_mest_med" min="0" placeholder="0"></td><td><input type="number" name="t28_mest_enf" min="0" placeholder="0"></td><td><input type="number" name="t28_mest_out" min="0" placeholder="0"></td></tr>
+              <tr><td>Pós-Graduação em PCIRA</td><td><input type="number" name="t28_pg_med" min="0" placeholder="0"></td><td><input type="number" name="t28_pg_enf" min="0" placeholder="0"></td><td><input type="number" name="t28_pg_out" min="0" placeholder="0"></td></tr>
+              <tr><td>Certificação europeia PCI ou PAPA (EUCIC/ESCMID)</td><td><input type="number" name="t28_cert_med" min="0" placeholder="0"></td><td><input type="number" name="t28_cert_enf" min="0" placeholder="0"></td><td><input type="number" name="t28_cert_out" min="0" placeholder="0"></td></tr>
+              <tr><td>Outros cursos de formação diferenciada</td><td><input type="number" name="t28_outros_med" min="0" placeholder="0"></td><td><input type="number" name="t28_outros_enf" min="0" placeholder="0"></td><td><input type="number" name="t28_outros_out" min="0" placeholder="0"></td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">29.</span>Existem profissionais com Competência atribuída pela respetiva Ordem Profissional em PCI e/ou PAPA?</legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q29" value="sim"> Sim</label>
+              <label class="radio-item"><input type="radio" name="q29" value="nao"> Não</label>
+            </div>
+          </fieldset>
+          <div class="sub-q" id="sub_q29">
+            <div class="grid-2">
+              <div>
+                <label class="q-label" for="q29_med" style="font-size:13px;font-weight:500"><span class="q-num">29.1a</span>N.º de médicos com CCIURA (Ordem dos Médicos)</label>
+                <input type="number" id="q29_med" name="q29_cciura_n" min="0" placeholder="0">
+              </div>
+              <div>
+                <label class="q-label" for="q29_enf" style="font-size:13px;font-weight:500"><span class="q-num">29.1b</span>N.º de enfermeiros com CADEPCI (Ordem dos Enfermeiros)</label>
+                <input type="number" id="q29_enf" name="q29_cadepci_n" min="0" placeholder="0">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">30.</span>O plano de desenvolvimento profissional da equipa inclui investigação e publicações em PCIRA?</legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q30" value="sim"> Sim</label>
+              <label class="radio-item"><input type="radio" name="q30" value="nao"> Não</label>
+            </div>
+          </fieldset>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== SECTION V ===== -->
+    <section class="form-section" id="sec5">
+      <div class="section-head">
+        <div class="section-num">V</div>
+        <div>
+          <h2>Envolvimento Institucional e Infraestruturas</h2>
+          <p>Espaço físico, apoio administrativo e integração em comissões</p>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">31.</span>O S/UL-PPCIRA dispõe de espaço físico próprio (gabinete dedicado)?<span class="req">*</span></legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q31" value="sim" required> Sim</label>
+              <label class="radio-item"><input type="radio" name="q31" value="nao"> Não</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">32.</span>O S/UL-PPCIRA dispõe de apoio administrativo alocado?<span class="req">*</span></legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q32" value="sim_exclusivo" required> Sim, exclusivo</label>
+              <label class="radio-item"><input type="radio" name="q32" value="sim_partilhado"> Sim, partilhado</label>
+              <label class="radio-item"><input type="radio" name="q32" value="nao"> Não</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">33.</span>O S/UL-PPCIRA integra formalmente as seguintes comissões/grupos de trabalho institucionais?</legend>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" name="q33" value="cft"> Comissão de Farmácia e Terapêutica (CFT)</label>
+              <label class="check-item"><input type="checkbox" name="q33" value="qualidade_seguranca"> Comissão/Unidade de Qualidade e Segurança</label>
+              <label class="check-item"><input type="checkbox" name="q33" value="outras_comissoes"> Outras comissões/grupos de trabalho</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">34.</span>O S/UL-PPCIRA dispõe de laboratório de microbiologia interno?<span class="req">*</span></legend>
+            <div class="radio-group">
+              <label class="radio-item"><input type="radio" name="q34" value="sim_sem_interrup" required> Sim, sem descontinuidade de serviço</label>
+              <label class="radio-item"><input type="radio" name="q34" value="sim_parcial"> Sim, com interrupção ou cobertura parcial</label>
+              <label class="radio-item"><input type="radio" name="q34" value="nao_externo"> Não (laboratório externo)</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">35.</span>Os CSP trabalham com que tipo de laboratório de microbiologia?</legend>
+            <div class="q-hint">Responda apenas se aplicável à sua tipologia de cuidados</div>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q35" value="interno"> Interno</label>
+              <label class="radio-item"><input type="radio" name="q35" value="externo"> Externo</label>
+              <label class="radio-item"><input type="radio" name="q35" value="nao_aplicavel"> Não aplicável</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">36.</span>Os CSP utilizam testes de diagnóstico rápido microbiológico (Point-of-Care)?</legend>
+            <div class="q-hint">Responda apenas se aplicável à sua tipologia de cuidados</div>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q36" value="sim"> Sim</label>
+              <label class="radio-item"><input type="radio" name="q36" value="nao"> Não</label>
+              <label class="radio-item"><input type="radio" name="q36" value="nao_aplicavel"> Não aplicável</label>
+            </div>
+          </fieldset>
+          <div class="sub-q" id="sub_q36">
+            <label class="q-label" for="q36_1"><span class="q-num">36.1</span>Especifique os testes Point-of-Care utilizados</label>
+            <textarea id="q36_1" name="q36_poc_especif" placeholder="Liste os testes de diagnóstico rápido microbiológico utilizados nos CSP…"></textarea>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <label class="q-label"><span class="q-num">37.</span>Existe carta microbiológica local atualizada?</label>
+          <div class="grid-2" style="margin-top:10px">
+            <div>
+              <label class="q-label" for="q37a" style="font-size:13px;font-weight:600">Carta hospitalar</label>
+              <select id="q37a" name="q37_hospitalar">
+                <option value="">— Selecione —</option>
+                <option value="semestral">Sim, semestral</option>
+                <option value="anual">Sim, anual</option>
+                <option value="2_anos">Sim, de 2 em 2 anos</option>
+                <option value="nao">Não existe</option>
+              </select>
+            </div>
+            <div>
+              <label class="q-label" for="q37b" style="font-size:13px;font-weight:600">Carta comunitária (CSP)</label>
+              <select id="q37b" name="q37_comunitaria">
+                <option value="">— Selecione —</option>
+                <option value="semestral">Sim, semestral</option>
+                <option value="anual">Sim, anual</option>
+                <option value="2_anos">Sim, de 2 em 2 anos</option>
+                <option value="nao">Não existe</option>
+                <option value="nao_aplicavel">Não aplicável</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== SECTION VI ===== -->
+    <section class="form-section" id="sec6">
+      <div class="section-head">
+        <div class="section-num">VI</div>
+        <div>
+          <h2>Perceção Prática</h2>
+          <p>Avaliação global e sugestões para o PPCIRA/DGS</p>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="q-block">
+          <fieldset>
+            <legend class="q-label"><span class="q-num">38.</span>Qual a classificação global das condições institucionais para a implementação do PPCIRA?<span class="req">*</span></legend>
+            <div class="radio-group horizontal">
+              <label class="radio-item"><input type="radio" name="q38" value="elevadas" required> Elevadas</label>
+              <label class="radio-item"><input type="radio" name="q38" value="moderadas"> Moderadas</label>
+              <label class="radio-item"><input type="radio" name="q38" value="baixas"> Baixas</label>
+            </div>
+          </fieldset>
+          <div style="margin-top:12px">
+            <label class="q-label" for="q38_razao" style="font-size:13px;font-weight:500">Justificação da classificação atribuída</label>
+            <textarea id="q38_razao" name="q38_razao" placeholder="Descreva os principais motivos para a classificação escolhida…"></textarea>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <label class="q-label"><span class="q-num">39.</span>Ordene os seguintes fatores por ordem de criticidade para a sua instituição</label>
+          <div class="q-hint rank-help">Arraste as opções para as ordenar do fator mais limitante (topo) para o menos limitante (base)</div>
+          <ul class="rank-list" id="rankList">
+            <li class="rank-item" draggable="true" data-value="falta_prioridade_ca">
+              <span class="rank-handle">⠿</span>
+              <span class="rank-pos">1</span>
+              <span>Falta de priorização pelo Conselho de Administração</span>
+            </li>
+            <li class="rank-item" draggable="true" data-value="falta_prioridade_resp_serv">
+              <span class="rank-handle">⠿</span>
+              <span class="rank-pos">2</span>
+              <span>Falta de priorização pelos Responsáveis de Serviço</span>
+            </li>
+            <li class="rank-item" draggable="true" data-value="falta_rh_tempo">
+              <span class="rank-handle">⠿</span>
+              <span class="rank-pos">3</span>
+              <span>Falta de recursos humanos com tempo protegido</span>
+            </li>
+            <li class="rank-item" draggable="true" data-value="falta_si">
+              <span class="rank-handle">⠿</span>
+              <span class="rank-pos">4</span>
+              <span>Falta de sistemas de informação adequados</span>
+            </li>
+            <li class="rank-item" draggable="true" data-value="falta_formacao_equipa">
+              <span class="rank-handle">⠿</span>
+              <span class="rank-pos">5</span>
+              <span>Falta de formação contínua da equipa S/UL-PPCIRA</span>
+            </li>
+            <li class="rank-item" draggable="true" data-value="falta_formacao_profissionais">
+              <span class="rank-handle">⠿</span>
+              <span class="rank-pos">6</span>
+              <span>Falta de formação dos demais profissionais de saúde</span>
+            </li>
+            <li class="rank-item" draggable="true" data-value="resistencia_adesao">
+              <span class="rank-handle">⠿</span>
+              <span class="rank-pos">7</span>
+              <span>Resistência à mudança / baixa adesão clínica</span>
+            </li>
+            <li class="rank-item" draggable="true" data-value="falta_infra_lab">
+              <span class="rank-handle">⠿</span>
+              <span class="rank-pos">8</span>
+              <span>Inexistência de infraestrutura laboratorial com resposta adequada</span>
+            </li>
+            <li class="rank-item" draggable="true" data-value="outro_fator">
+              <span class="rank-handle">⠿</span>
+              <span class="rank-pos">9</span>
+              <span>Outro fator limitante</span>
+            </li>
+          </ul>
+          <div style="margin-top:10px">
+            <label class="q-label" for="q39_outro" style="font-size:13px;font-weight:500">Se selecionou «Outro», especifique</label>
+            <input type="text" id="q39_outro" name="q39_outro" placeholder="Descreva o outro fator limitante…">
+          </div>
+        </div>
+
+        <div class="q-block">
+          <label class="q-label" for="q40"><span class="q-num">40.</span>Indique até três sugestões de intervenções ou iniciativas prioritárias para o PPCIRA/DGS nos próximos 3 anos<span class="req">*</span></label>
+          <div class="q-hint">Sugestão 1</div>
+          <textarea name="q40_sug1" placeholder="Primeira sugestão prioritária…" style="margin-bottom:10px"></textarea>
+          <div class="q-hint">Sugestão 2</div>
+          <textarea name="q40_sug2" placeholder="Segunda sugestão prioritária…" style="margin-bottom:10px"></textarea>
+          <div class="q-hint">Sugestão 3</div>
+          <textarea name="q40_sug3" placeholder="Terceira sugestão prioritária (opcional)…"></textarea>
+        </div>
+
+        <div class="q-block" style="border-bottom:none;padding-bottom:0">
+          <label class="q-label" for="q_obs"><span class="q-num">—</span>Observações adicionais</label>
+          <textarea id="q_obs" name="q_observacoes" placeholder="Utilize este espaço para quaisquer comentários, esclarecimentos ou informações adicionais que considere relevantes…" style="min-height:110px"></textarea>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ACTIONS -->
+    <div class="form-actions" id="formActions">
+      <button type="button" class="btn btn-primary" onclick="exportCSV()" style="background:var(--teal-d)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8h6M5 5h4M5 11h3"/></svg>
+        Exportar para Excel
+      </button>
+      <button type="button" class="btn btn-secondary" onclick="exportJSON()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 2v9M4 7l4 4 4-4M2 13h12"/></svg>
+        Exportar JSON
+      </button>
+      <button type="button" class="btn btn-outline" onclick="window.print()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="1" width="10" height="8" rx="1"/><path d="M3 6H1v7h14V6h-2"/><rect x="4" y="11" width="8" height="2"/></svg>
+        Imprimir / PDF
+      </button>
+      <button type="submit" class="btn btn-primary" id="submitBtn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 8l4 4 8-8"/></svg>
+        Submeter Questionário
+      </button>
+      <div class="validation-msg" id="validationMsg">Por favor, preencha todos os campos obrigatórios antes de submeter.</div>
+    </div>
+
+    </form>
+
+    <!-- SUCCESS -->
+    <div id="success-panel">
+      <div class="check">✅</div>
+      <h2>Questionário submetido com sucesso!</h2>
+      <p>Obrigado pela sua participação no inquérito CIURA/PPCIRA 2026.</p>
+      <p>As suas respostas foram registadas e serão analisadas de forma confidencial e agregada pelo PPCIRA/DGS e pelo CIURA da Ordem dos Médicos.</p>
+      <p style="margin-top:16px"><strong>Data de submissão:</strong> <span id="submitDate"></span></p>
+      <div style="margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="exportCSV()" style="background:var(--teal-d)">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8h6M5 5h4M5 11h3"/></svg>
+          Descarregar Excel (CSV)
+        </button>
+        <button class="btn btn-secondary" onclick="exportJSON()">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 2v9M4 7l4 4 4-4M2 13h12"/></svg>
+          Descarregar JSON
+        </button>
+        <button class="btn btn-outline" onclick="window.print()">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="1" width="10" height="8" rx="1"/><path d="M3 6H1v7h14V6h-2"/><rect x="4" y="11" width="8" height="2"/></svg>
+          Imprimir comprovativo
+        </button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao topo">
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l5-5 5 5"/></svg>
+</button>
+
+<footer>
+  <strong>PPCIRA — Programa de Prevenção e Controlo de Infeções e de Resistência aos Antimicrobianos</strong><br>
+  Direção-Geral da Saúde · Ordem dos Médicos (CIURA) · 2026 · Dados tratados de forma confidencial e agregada
+</footer>
+
+<script>
+// ---- CONDITIONAL VISIBILITY ----
+const conditions = [
+  {trigger:'q6',   value:'sim',        target:'sub_q6'},
+  {trigger:'q11',  value:'sim',        target:'sub_q11'},
+  {trigger:'q13_3',value:'nao',        target:'sub_q13_3'},
+  {trigger:'q14',  value:'sim',        target:'sub_q14'},
+  {trigger:'q19',  value:'sim_alguns', target:'sub_q19'},
+  {trigger:'q20',  values:['sim_todos','parcialmente'], target:'sub_q20'},
+  {trigger:'q20_4',value:'sim',        target:'sub_q20_4'},
+  {trigger:'q21',  values:['sim_todos','parcialmente'], target:'sub_q21'},
+  {trigger:'q24',  value:'sim',        target:'sub_q24'},
+  {trigger:'q25',  value:'sim',        target:'sub_q25'},
+  {trigger:'q26',  values:['sim_obrigatorio','sim_opcional'], target:'sub_q26'},
+  {trigger:'q27',  value:'sim',        target:'sub_q27'},
+  {trigger:'q29',  value:'sim',        target:'sub_q29'},
+  {trigger:'q36',  value:'sim',        target:'sub_q36'},
+];
+
+function applyConditions(){
+  conditions.forEach(c=>{
+    const inputs = document.querySelectorAll(`input[name="${c.trigger}"]`);
+    const sub = document.getElementById(c.target);
+    if(!sub) return;
+    let active = false;
+    inputs.forEach(inp=>{
+      if(!inp.checked) return;
+      if(c.value && inp.value===c.value) active=true;
+      if(c.values && c.values.includes(inp.value)) active=true;
+    });
+    sub.classList.toggle('visible',active);
+  });
+}
+
+document.addEventListener('change', applyConditions);
+
+// Radio/checkbox highlight
+document.querySelectorAll('.radio-item input,.check-item input').forEach(inp=>{
+  inp.addEventListener('change',()=>{
+    if(inp.type==='radio'){
+      document.querySelectorAll(`input[name="${inp.name}"]`).forEach(r=>{
+        r.closest('.radio-item').classList.toggle('selected',r.checked);
+      });
+    } else {
+      inp.closest('.check-item').classList.toggle('selected',inp.checked);
+    }
+  });
+});
+
+// ---- PROGRESS BAR ----
+function updateProgress(){
+  const required = document.querySelectorAll('[required]');
+  let filled=0;
+  required.forEach(f=>{
+    if(f.type==='radio'){
+      const g=document.querySelectorAll(`input[name="${f.name}"]`);
+      if([...g].some(r=>r.checked)) filled++;
+    } else if(f.value.trim()!=='') filled++;
+  });
+  const pct = required.length ? Math.round(filled/required.length*100) : 0;
+  document.getElementById('progressBar').style.width=pct+'%';
+  updateSideNav();
+}
+
+document.addEventListener('input',updateProgress);
+document.addEventListener('change',updateProgress);
+
+// ---- SIDE NAV ACTIVE STATE ----
+function updateSideNav(){
+  const sections=['sec1','sec2','sec3','sec4','sec5','sec6'];
+  const links = document.querySelectorAll('#sideNav a');
+  const scrollY = window.scrollY + 90;
+  let current='';
+  sections.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && el.offsetTop<=scrollY) current=id;
+  });
+  links.forEach(a=>{
+    const href=a.getAttribute('href').slice(1);
+    a.classList.toggle('active', href===current);
+  });
+}
+window.addEventListener('scroll',updateSideNav);
+
+// ---- RANKING DRAG & DROP ----
+(function(){
+  const list=document.getElementById('rankList');
+  if(!list) return;
+  let dragging=null;
+
+  list.addEventListener('dragstart',e=>{
+    dragging=e.target.closest('.rank-item');
+    dragging.style.opacity='0.4';
+  });
+  list.addEventListener('dragend',e=>{
+    e.target.style.opacity='';
+    dragging=null;
+    updateRankPositions();
+  });
+  list.addEventListener('dragover',e=>{
+    e.preventDefault();
+    const over=e.target.closest('.rank-item');
+    if(!over||over===dragging) return;
+    const rect=over.getBoundingClientRect();
+    const mid=rect.top+rect.height/2;
+    if(e.clientY<mid) list.insertBefore(dragging,over);
+    else list.insertBefore(dragging,over.nextSibling);
+  });
+
+  // Touch support
+  let touchItem=null,touchClone=null;
+  list.addEventListener('touchstart',e=>{
+    touchItem=e.target.closest('.rank-item');
+    if(!touchItem) return;
+    const rect=touchItem.getBoundingClientRect();
+    touchClone=touchItem.cloneNode(true);
+    touchClone.style.cssText=`position:fixed;top:${rect.top}px;left:${rect.left}px;width:${rect.width}px;opacity:0.8;z-index:9999;pointer-events:none;`;
+    document.body.appendChild(touchClone);
+    touchItem.style.opacity='0.3';
+  },{passive:true});
+  document.addEventListener('touchmove',e=>{
+    if(!touchClone) return;
+    const t=e.touches[0];
+    touchClone.style.top=(t.clientY-30)+'px';
+    touchClone.style.left=touchClone.style.left;
+    const items=[...list.querySelectorAll('.rank-item:not([style*="opacity: 0.3"])')];
+    items.forEach(item=>{
+      const r=item.getBoundingClientRect();
+      if(t.clientY>r.top && t.clientY<r.bottom){
+        if(t.clientY<r.top+r.height/2) list.insertBefore(touchItem,item);
+        else list.insertBefore(touchItem,item.nextSibling);
+      }
+    });
+  },{passive:true});
+  document.addEventListener('touchend',()=>{
+    if(!touchClone) return;
+    touchClone.remove(); touchClone=null;
+    if(touchItem) touchItem.style.opacity='';
+    touchItem=null;
+    updateRankPositions();
+  });
+})();
+
+function updateRankPositions(){
+  document.querySelectorAll('#rankList .rank-item').forEach((item,i)=>{
+    item.querySelector('.rank-pos').textContent=i+1;
+  });
+}
+
+// ---- SCROLL TOP BUTTON ----
+window.addEventListener('scroll',()=>{
+  document.getElementById('scrollTop').classList.toggle('visible',window.scrollY>400);
+});
+
+// ---- COLLECT FORM DATA ----
+function collectData(){
+  const data={meta:{timestamp:new Date().toISOString(),version:'CIURA-PPCIRA-2026-v1'}};
+  const form=document.getElementById('mainForm');
+  const fd=new FormData(form);
+
+  // Ranking order
+  const rankOrder=[...document.querySelectorAll('#rankList .rank-item')].map(item=>item.dataset.value);
+  data.q39_ranking=rankOrder;
+
+  for(const [k,v] of fd.entries()){
+    if(data[k]===undefined) data[k]=v;
+    else if(Array.isArray(data[k])) data[k].push(v);
+    else data[k]=[data[k],v];
+  }
+  return data;
+}
+
+// ---- LABELS MAP FOR EXCEL EXPORT ----
+const FIELD_LABELS = {
+  q1:'1. Nome da instituição',
+  q2:'2. Setor da instituição',
+  q3:'3. Tipologia de cuidados',
+  q4:'4. Região de Saúde',
+  q5_camas_agudo:'5a. N.º camas internamento agudo',
+  q5_camas_uci:'5b. N.º camas UCI',
+  q5_camas_continuados:'5c. N.º camas continuados',
+  q5_taxa_ocupacao:'5d. Taxa de ocupação 2025 (%)',
+  q5_pop_csp:'5e. Pop. inscrita CSP (n.º utentes)',
+  q6:'6. S/UL-PPCIRA formalmente nomeado pelo órgão máximo',
+  q6_1:'6.1 Tipo de estrutura formal',
+  q7:'7. Regulamento aprovado',
+  q8:'8. Reporta diretamente a',
+  q9:'9. Plano de Atividades anual contratualizado',
+  q10:'10. Relatório anual de atividades',
+  q11:'11. Objetivos estratégicos contemplam indicadores PCIRA',
+  q11_indicadores:'11.1 Indicadores PCIRA nos objetivos estratégicos',
+  q12:'12. S/UL-PPCIRA é centro de custos',
+  t13_dir_n:'13. Equipa – Diretor(a): n.º elementos',
+  t13_dir_esp:'13. Equipa – Diretor(a): especialidade',
+  t13_dir_hc:'13. Equipa – Diretor(a): h/semana contratualizadas',
+  t13_dir_he:'13. Equipa – Diretor(a): h/semana efetivas',
+  t13_coord_n:'13. Equipa – Coordenador(a): n.º elementos',
+  t13_coord_esp:'13. Equipa – Coordenador(a): especialidade',
+  t13_coord_hc:'13. Equipa – Coordenador(a): h/semana contratualizadas',
+  t13_coord_he:'13. Equipa – Coordenador(a): h/semana efetivas',
+  t13_enfg_n:'13. Equipa – Enf. Gestor(a): n.º elementos',
+  t13_enfg_esp:'13. Equipa – Enf. Gestor(a): especialidade',
+  t13_enfg_hc:'13. Equipa – Enf. Gestor(a): h/semana contratualizadas',
+  t13_enfg_he:'13. Equipa – Enf. Gestor(a): h/semana efetivas',
+  t13_med_n:'13. Equipa – Médico(s): n.º elementos',
+  t13_med_esp:'13. Equipa – Médico(s): especialidade(s)',
+  t13_med_hc:'13. Equipa – Médico(s): h/semana contratualizadas',
+  t13_med_he:'13. Equipa – Médico(s): h/semana efetivas',
+  t13_enf_n:'13. Equipa – Enfermeiro(s): n.º elementos',
+  t13_enf_esp:'13. Equipa – Enfermeiro(s): especialidade(s)',
+  t13_enf_hc:'13. Equipa – Enfermeiro(s): h/semana contratualizadas',
+  t13_enf_he:'13. Equipa – Enfermeiro(s): h/semana efetivas',
+  t13_farm_n:'13. Equipa – Farmacêutico(s): n.º elementos',
+  t13_farm_esp:'13. Equipa – Farmacêutico(s): área',
+  t13_farm_hc:'13. Equipa – Farmacêutico(s): h/semana contratualizadas',
+  t13_farm_he:'13. Equipa – Farmacêutico(s): h/semana efetivas',
+  t13_out_n:'13. Equipa – Outro(s): n.º elementos',
+  t13_out_esp:'13. Equipa – Outro(s): categoria/área',
+  t13_out_hc:'13. Equipa – Outro(s): h/semana contratualizadas',
+  t13_out_he:'13. Equipa – Outro(s): h/semana efetivas',
+  q13_1:'13.1 Diretor ou Coord. formalmente nomeado',
+  q13_2:'13.2 Nomeação formal abrange todos os elementos',
+  q13_3:'13.3 Cumpre requisitos Despacho n.º 10901/2022',
+  q13_3_1:'13.3.1 Défice(s) identificado(s)',
+  q14:'14. Elos PCIRA nos serviços formalmente designados',
+  q14_pct:'14.1 % serviços com elos PCIRA',
+  q15_med_pci:'15. Distribuição h/semana – Médicos % PCI',
+  q15_med_papa:'15. Distribuição h/semana – Médicos % PAPA',
+  q15_enf_pci:'15. Distribuição h/semana – Enfermeiros % PCI',
+  q15_enf_papa:'15. Distribuição h/semana – Enfermeiros % PAPA',
+  q15_out_pci:'15. Distribuição h/semana – Outros % PCI',
+  q15_out_papa:'15. Distribuição h/semana – Outros % PAPA',
+  q16:'16. Periodicidade reunião equipa nuclear',
+  q17:'17. Periodicidade reunião com órgão máximo de gestão',
+  q18:'18. Periodicidade reunião com serviços clínicos',
+  q19:'19. Contratualização objetivos PPCIRA com serviços',
+  q19_pct:'19.1 % serviços com objetivos PPCIRA contratualizados',
+  q20:'20. Programas estruturados de VE nas dimensões PCIRA',
+  q20_1:'20.1 Dimensões abrangidas pela VE',
+  q20_2_pct:'20.2 % serviços abrangidos pela VE',
+  q20_3:'20.3 Sistema de informação utilizado',
+  q20_4:'20.4 Feedback estruturado e regular dos dados VE',
+  q20_4_freq_metodo:'20.4.1 Frequência e método do feedback VE',
+  q21:'21. PAPA em funcionamento',
+  q21_1:'21.1 Valências/contextos com PAPA implementado',
+  q21_2:'21.2 Componentes PAPA implementadas',
+  q22:'22. Frequência feedback PAPA aos prescritores',
+  q23:'23. Plano institucional de resposta a surtos',
+  q24:'24. Participação em projeto melhoria qualidade nacional',
+  q24_projetos:'24.1 Projetos nacionais em que participa',
+  q25:'25. Participação em grupos trabalho/projetos PCIRA',
+  q25_grupos:'25.1 Grupos de trabalho/projetos identificados',
+  q26:'26. Programas formais de capacitação e treino PCIRA',
+  q26_periodicidade:'26.1 Periodicidade da formação PCIRA',
+  q27:'27. Formação contínua equipa S/UL-PPCIRA assegurada',
+  q27_como:'27.1 Como é assegurada a formação contínua',
+  t28_dout_med:'28. Formação diferenciada – Doutoramento: Médicos',
+  t28_dout_enf:'28. Formação diferenciada – Doutoramento: Enfermeiros',
+  t28_dout_out:'28. Formação diferenciada – Doutoramento: Outros',
+  t28_mest_med:'28. Formação diferenciada – Mestrado: Médicos',
+  t28_mest_enf:'28. Formação diferenciada – Mestrado: Enfermeiros',
+  t28_mest_out:'28. Formação diferenciada – Mestrado: Outros',
+  t28_pg_med:'28. Formação diferenciada – Pós-Graduação: Médicos',
+  t28_pg_enf:'28. Formação diferenciada – Pós-Graduação: Enfermeiros',
+  t28_pg_out:'28. Formação diferenciada – Pós-Graduação: Outros',
+  t28_cert_med:'28. Formação diferenciada – Cert. europeia (EUCIC/ESCMID): Médicos',
+  t28_cert_enf:'28. Formação diferenciada – Cert. europeia (EUCIC/ESCMID): Enfermeiros',
+  t28_cert_out:'28. Formação diferenciada – Cert. europeia (EUCIC/ESCMID): Outros',
+  t28_outros_med:'28. Formação diferenciada – Outros cursos: Médicos',
+  t28_outros_enf:'28. Formação diferenciada – Outros cursos: Enfermeiros',
+  t28_outros_out:'28. Formação diferenciada – Outros cursos: Outros',
+  q29:'29. Competência atribuída pela Ordem Profissional (PCI/PAPA)',
+  q29_cciura_n:'29.1a N.º médicos com CCIURA (Ordem dos Médicos)',
+  q29_cadepci_n:'29.1b N.º enfermeiros com CADEPCI (Ordem Enfermeiros)',
+  q30:'30. Plano desenv. profissional inclui investigação/publicações PCIRA',
+  q31:'31. Espaço físico próprio (gabinete dedicado)',
+  q32:'32. Apoio administrativo alocado',
+  q33:'33. Integração em comissões institucionais',
+  q34:'34. Laboratório de microbiologia interno',
+  q35:'35. CSP – tipo de laboratório de microbiologia',
+  q36:'36. CSP – testes Point-of-Care microbiológicos',
+  q36_poc_especif:'36.1 Testes Point-of-Care utilizados',
+  q37_hospitalar:'37a. Carta microbiológica hospitalar',
+  q37_comunitaria:'37b. Carta microbiológica comunitária (CSP)',
+  q38:'38. Classificação global das condições institucionais para PPCIRA',
+  q38_razao:'38. Justificação da classificação atribuída',
+  q39_ranking:'39. Fatores limitantes (ordem de criticidade)',
+  q39_outro:'39. Outro fator limitante (especificação)',
+  q40_sug1:'40. Sugestão 1 para PPCIRA/DGS (próximos 3 anos)',
+  q40_sug2:'40. Sugestão 2 para PPCIRA/DGS (próximos 3 anos)',
+  q40_sug3:'40. Sugestão 3 para PPCIRA/DGS (próximos 3 anos)',
+  q_observacoes:'Observações adicionais',
+};
+
+// Value labels for coded answers
+const VALUE_LABELS = {
+  publica:'Pública', privada:'Privada', social:'Social', outra_setor:'Outra',
+  hospital:'Hospital', csp:'CSP', continuados:'Continuados', paliativos:'Paliativos', outra_tipologia:'Outra',
+  norte:'Norte', centro:'Centro', lvt:'Lisboa e Vale do Tejo (LVT)', alentejo:'Alentejo', algarve:'Algarve', ram:'Região Autónoma da Madeira', raa:'Região Autónoma dos Açores',
+  sim:'Sim', nao:'Não', elaboracao:'Em elaboração',
+  servico_autonomo:'Serviço autónomo', unidade_func_autonoma:'Unidade Funcional Autónoma', unidade_func_integrada:'Unidade Funcional Integrada', apoio_tecnico:'Apoio Técnico', comissao:'Comissão', outro_estrutura:'Outro',
+  conselho_admin:'Conselho de Administração', dir_clinica:'Direção Clínica', dir_clin_enf:'Direção Clínica + Enfermagem', dir_enfermagem:'Direção de Enfermagem', departamento:'Departamento', outro_reporte:'Outro',
+  sim_todos:'Sim, todos', parcialmente:'Parcialmente',
+  sim_exclusivo:'Sim, exclusivo', sim_partilhado:'Sim, partilhado',
+  sim_obrigatorio:'Sim, obrigatório', sim_opcional:'Sim, opcional',
+  semanal:'Semanal', quinzenal:'Quinzenal', mensal:'Mensal', trimestral:'Trimestral', semestral:'Semestral', anual:'Anual', sem_periodicidade:'Sem periodicidade', so_quando_solicitado:'Só quando solicitado', outra:'Outra',
+  sim_sem_interrup:'Sim, sem descontinuidade', sim_parcial:'Sim, com interrupção/parcial', nao_externo:'Não (laboratório externo)',
+  interno:'Interno', externo:'Externo', nao_aplicavel:'Não aplicável',
+  elevadas:'Elevadas', moderadas:'Moderadas', baixas:'Baixas',
+  '0_25':'0–25%', '26_50':'26–50%', '51_75':'51–75%', '76_100':'76–100%',
+  '2_anos':'De 2 em 2 anos', '3_anos':'De 3 em 3 anos',
+  sim_alguns:'Sim, em alguns serviços',
+  sim_todos_servicos:'Sim, em todos os serviços',
+  nao_realizado:'Não é realizado',
+  plataforma_dgs:'Plataforma DGS', hepic:'Hepic®', meliora:'Meliora®', outro_si:'Outro',
+  pbci:'PBCI', luvas:'Uso de luvas', higiene_maos:'Higiene das mãos', ilc:'ILC', ilc_cirurgica:'ILC cirúrgica (ECDC)', icsrcvc:'ICSRCVC', bacteriemias:'Bacteriémias', pai:'PAI', ituacv:'ITUACV', mmr:'Microrganismos multirresistentes', c_difficile:'C. difficile', consumo_atm:'Consumo de antimicrobianos', qualidade_papa:'Qualidade prescrição PAPA', outros_ve:'Outros',
+  internamento:'Internamento hospitalar', ambulatorio:'Ambulatório/HDia/Consultas', ucci:'UCCI', smi:'SMI', urgencia:'Urgência',
+  revisao_72h:'Revisão/restrição até 72h', protocolos:'Protocolos institucionais', formacao:'Formação profissionais', feedback_metrics:'Retorno de métricas', comportamental:'Projetos comportamentais', outros_papa:'Outros',
+  cft:'Comissão de Farmácia e Terapêutica (CFT)', qualidade_seguranca:'Comissão/Unidade Qualidade e Segurança', outras_comissoes:'Outras comissões',
+  deficit_medico:'Défice médico', deficit_enfermagem:'Défice enfermagem', ausencia_microbiologia:'Ausência microbiologia', ausencia_farmaceutico:'Ausência farmacêutico', ausencia_horario_dir:'Ausência horário diretor', ausencia_qualidade:'Ausência competências qualidade', outro_deficit:'Outro',
+  falta_prioridade_ca:'Falta priorização CA', falta_prioridade_resp_serv:'Falta priorização resp. serviço', falta_rh_tempo:'Falta RH tempo protegido', falta_si:'Falta SI adequados', falta_formacao_equipa:'Falta formação equipa S/UL-PPCIRA', falta_formacao_profissionais:'Falta formação demais profissionais', resistencia_adesao:'Resistência à mudança/adesão', falta_infra_lab:'Falta infra. laboratorial', outro_fator:'Outro fator',
+};
+
+function decodeValue(v){
+  if(Array.isArray(v)) return v.map(x=>VALUE_LABELS[x]||x).join('; ');
+  if(typeof v==='string') return VALUE_LABELS[v]||v;
+  return v??'';
+}
+
+// ---- EXPORT CSV (Excel-compatible) ----
+function exportCSV(){
+  const d=collectData();
+  const inst=(d.q1||'instituicao').replace(/[^a-zA-Z0-9áéíóúâêôãõàçÁÉÍÓÚÂÊÔÃÕÀÇ\s]/g,'').trim().replace(/\s+/g,'_').substring(0,40)||'resposta';
+
+  const csvEsc=v=>{
+    const s=String(v??'').replace(/"/g,'""');
+    return (s.includes(',')||s.includes('\n')||s.includes('"'))?`"${s}"`:s;
+  };
+
+  const rows=[
+    ['Código','Pergunta','Resposta'],
+    ['meta_timestamp','Data/hora de preenchimento',d.meta?.timestamp||''],
+    ['','',''],
+    ['','=== SECÇÃO I — CARACTERIZAÇÃO E ENQUADRAMENTO INSTITUCIONAL ===',''],
+  ];
+
+  // Ranked items special handling
+  const RANK_LABELS = {
+    falta_prioridade_ca:'Falta priorização pelo CA',
+    falta_prioridade_resp_serv:'Falta priorização resp. serviços',
+    falta_rh_tempo:'Falta RH com tempo protegido',
+    falta_si:'Falta SI adequados',
+    falta_formacao_equipa:'Falta formação equipa S/UL-PPCIRA',
+    falta_formacao_profissionais:'Falta formação demais profissionais',
+    resistencia_adesao:'Resistência à mudança/adesão clínica',
+    falta_infra_lab:'Falta infraestrutura laboratorial',
+    outro_fator:'Outro fator',
+  };
+
+  const sectionBreaks = {
+    q13_1:['','',''],
+    q14:['','=== SECÇÃO II — RECURSOS HUMANOS E ESTRUTURA DE FUNCIONAMENTO ===',''],
+    q20:['','=== SECÇÃO III — ATIVIDADES DE VIGILÂNCIA EPIDEMIOLÓGICA ===',''],
+    q26:['','=== SECÇÃO IV — FORMAÇÃO, COMPETÊNCIAS E DESENVOLVIMENTO PROFISSIONAL ===',''],
+    q31:['','=== SECÇÃO V — ENVOLVIMENTO INSTITUCIONAL E INFRAESTRUTURAS ===',''],
+    q38:['','=== SECÇÃO VI — PERCEÇÃO PRÁTICA ===',''],
+  };
+
+  Object.entries(FIELD_LABELS).forEach(([key,label])=>{
+    if(sectionBreaks[key]) rows.push(sectionBreaks[key],['','','']);
+
+    if(key==='q39_ranking'){
+      const order=(d[key]||[]).map((v,i)=>`${i+1}. ${RANK_LABELS[v]||v}`).join(' | ');
+      rows.push([key,label,order]);
+    } else {
+      const val=d[key];
+      rows.push([key,label,decodeValue(val)]);
+    }
+  });
+
+  const csv='﻿'+rows.map(r=>r.map(csvEsc).join(',')).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`PPCIRA_2026_${inst}.csv`;a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ---- EXPORT JSON ----
+function exportJSON(){
+  const d=collectData();
+  const inst=(d.q1||'instituicao').replace(/[^a-zA-Z0-9áéíóúâêôãõàçÁÉÍÓÚÂÊÔÃÕÀÇ\s]/g,'').trim().replace(/\s+/g,'_').substring(0,40)||'resposta';
+  const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`PPCIRA_2026_${inst}.json`;a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ---- FORM VALIDATION ----
+function validateForm(){
+  let valid=true;
+  const msgs=[];
+
+  // Check required radios
+  const radioGroups=new Set();
+  document.querySelectorAll('input[type=radio][required]').forEach(r=>radioGroups.add(r.name));
+  radioGroups.forEach(name=>{
+    const group=document.querySelectorAll(`input[name="${name}"]`);
+    const checked=[...group].some(r=>r.checked);
+    if(!checked){
+      valid=false;
+      const legend=group[0].closest('fieldset')?.querySelector('legend');
+      if(legend) msgs.push(legend.textContent.trim().substring(0,80)+'…');
+      group.forEach(r=>r.closest('.radio-item')?.classList.add('invalid'));
+    } else {
+      group.forEach(r=>r.closest('.radio-item')?.classList.remove('invalid'));
+    }
+  });
+
+  // Check required text/select
+  document.querySelectorAll('input[type=text][required],select[required]').forEach(f=>{
+    if(!f.value.trim()){
+      valid=false;f.classList.add('invalid');
+    } else f.classList.remove('invalid');
+  });
+
+  // Check q40 (suggestions)
+  const sug1=document.querySelector('[name=q40_sug1]');
+  if(sug1&&!sug1.value.trim()){
+    valid=false;sug1.classList.add('invalid');
+  } else if(sug1) sug1.classList.remove('invalid');
+
+  return valid;
+}
+
+// ---- SUBMIT ----
+document.getElementById('mainForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  if(!validateForm()){
+    const msg=document.getElementById('validationMsg');
+    msg.classList.add('visible');
+    const firstInvalid=document.querySelector('.invalid');
+    if(firstInvalid) firstInvalid.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  document.getElementById('validationMsg').classList.remove('visible');
+
+  // Save to localStorage as backup
+  try{localStorage.setItem('ppcira_2026_last',JSON.stringify(collectData()));}catch(err){}
+
+  // Show success
+  document.getElementById('mainForm').style.display='none';
+  document.getElementById('formActions').style.display='none';
+  const panel=document.getElementById('success-panel');
+  panel.classList.add('visible');
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('submitDate').textContent=new Date().toLocaleString('pt-PT',{dateStyle:'long',timeStyle:'short'});
+  document.getElementById('progressBar').style.width='100%';
+});
+
+// Init
+applyConditions();
+updateProgress();
+updateSideNav();
+</script>
+</body>
+</html>
